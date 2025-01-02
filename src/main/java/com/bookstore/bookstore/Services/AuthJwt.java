@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,18 @@ public class AuthJwt implements AuthJwtRepository {
     private SecretKey key;
 
 
-    public void JwtUtil() {
-        // Initialize key with the secret from properties file
+    @PostConstruct
+    public void init() {
+        // Initialize the key with the secret from properties file
+        if (secret == null || secret.isEmpty()) {
+            throw new IllegalArgumentException("JWT secret is missing.");
+        }
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+
     public String generateToken(String username) {
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         try {
