@@ -27,5 +27,6 @@
     <orderEntry type="library" name="Maven: io.springfox:springfox-core:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-core:6.0.12" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.annotation:jakarta.annotation-api:2.1.1" level="project" />
   </component>
 </module>
