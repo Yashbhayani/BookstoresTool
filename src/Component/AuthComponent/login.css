@@ -1,0 +1,152 @@
+body {
+  height: 100%;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-card {
+  background-color: black;
+  color: white;
+}
+
+.btn,
+.btn-primary,
+.mb-4 {
+  width: 30vw;
+}
+
+@media only screen and (max-width: 768px) {
+  .medium-input,
+  .btn {
+    width: 100%;
+  }
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("../image/login/img2.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.login-content {
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-box {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.background-image {
+  background-image: url("../image/login/img2.jpg");
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(10px);
+}
+
+.login-form {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  width: 100px;
+  display: block;
+  margin: 0 auto 30px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+@keyframes zoomIn {
+  from {
+      transform: scale(1.1);
+  }
+  to {
+      transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+      transform: scale(1);
+  }
+  to {
+      transform: scale(1.1);
+  }
+}
+
+.login-box {
+  animation: zoomIn 1s ease;
+}
+
+.background-image {
+  animation: zoomOut 1s ease;
+}
+
+.welcome-text {
+  position: absolute;
+  top: 10vh;
+  font-size: 28px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+
+.login-button {
+  margin-top: 20px;
+}
+
+.login-button {
+  background-color: rgba(160, 82, 45, 0.7);
+  color: #fff;
+}
+
+.login-button:hover {
+  background-color: #7A3B1E; 
+}
