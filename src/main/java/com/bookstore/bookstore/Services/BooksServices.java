@@ -159,7 +159,7 @@ public class BooksServices  implements BooksRepository {
                             public BooksModel mapRow(ResultSet rs, int rowNum) throws SQLException {
                                 BooksModel book = new BooksModel();
                                 try {
-                                    book.setId(authjwtrepository.BookidEncrypt(rs.getInt("BookID")));
+                                    book.setId(authjwtrepository.IdEncrypt(rs.getInt("BookID")));
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
@@ -184,7 +184,7 @@ public class BooksServices  implements BooksRepository {
                             public BooksModel mapRow(ResultSet rs, int rowNum) throws SQLException {
                                 BooksModel book = new BooksModel();
                                 try {
-                                    book.setId(authjwtrepository.BookidEncrypt(rs.getInt("BookID")));
+                                    book.setId(authjwtrepository.IdEncrypt(rs.getInt("BookID")));
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }                                book.setLanguageid(rs.getInt("LanguageID"));
@@ -228,7 +228,7 @@ public class BooksServices  implements BooksRepository {
                 String userResult = jdbcTemplate.queryForObject(SpResult, new Object[]{username}, String.class);
 
                 if ("True".equals(userResult)) {
-                    int bid = Integer.parseInt(authjwtrepository.BookidDecrypt(bookId));
+                    int bid = Integer.parseInt(authjwtrepository.IdDecrypt(bookId));
                     SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.BOOKALLDETAILS.name()}, String.class);
 
                     List<BookModel> booksList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<List<BookModel>>) callableStatement -> {

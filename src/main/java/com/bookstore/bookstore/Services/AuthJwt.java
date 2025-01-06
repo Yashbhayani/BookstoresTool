@@ -77,7 +77,7 @@ public class AuthJwt implements AuthJwtRepository {
 
 
     @Override
-    public String BookidEncrypt(long bookid) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public String IdEncrypt(long bookid) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
         try {
             //String paddedKey  = String.valueOf(bookid);
             String paddedKey  = secretKey.substring(0, 16);
@@ -93,7 +93,7 @@ public class AuthJwt implements AuthJwtRepository {
     }
 
     @Override
-    public String BookidDecrypt(String encryptedText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public String IdDecrypt(String encryptedText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         try {
             String paddedKey = secretKey.substring(0, 16);
             SecretKeySpec keySpec = new SecretKeySpec(paddedKey.getBytes(), "AES");

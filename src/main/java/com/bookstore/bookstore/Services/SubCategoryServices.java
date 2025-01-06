@@ -70,13 +70,13 @@ public class SubCategoryServices implements SubCategoryRepository {
                                             while (rs != null && rs.next()) {
                                                 SubCategoryTypeModel subCategoryTypeModel = new SubCategoryTypeModel();
                                                 try {
-                                                    subCategoryTypeModel.setSubCategoryId(authjwtrepository.BookidEncrypt(rs.getInt("SubCategoryID")));
+                                                    subCategoryTypeModel.setSubCategoryId(authjwtrepository.IdEncrypt(rs.getInt("SubCategoryID")));
                                                 } catch (Exception e) {
                                                     throw new RuntimeException(e);
                                                 }
                                                 subCategoryTypeModel.setProductName(rs.getString("ProductName"));
                                                 subCategoryTypeModel.setCategoryName(rs.getString("CategoryName"));
-                                                subCategoryTypeModel.setSubCategoryCode(rs.getString("SubCategoryCode"));
+                                                //subCategoryTypeModel.setSubCategoryCode(rs.getString("SubCategoryCode"));
                                                 subCategoryTypeModel.setSubCategoryPath(rs.getString("SubCategoryPath"));
                                                 subCategoryTypeModel.setSubCategoryValue(rs.getString("SubCategoryValue"));
                                                 subCategoryTypeModel.setActive(rs.getBoolean("IsActive"));
@@ -356,7 +356,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(iSubCategoryModel.scID));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(iSubCategoryModel.scID));
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
@@ -370,10 +370,10 @@ public class SubCategoryServices implements SubCategoryRepository {
                                     PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryEditQuery, Statement.RETURN_GENERATED_KEYS);
                                     ps.setInt(1, iSubCategoryModel.pID);
                                     //ps.setString(2, iSubCategoryModel.code);
-                                    ps.setString(2, iSubCategoryModel.path);
-                                    ps.setString(3, iSubCategoryModel.name);
-                                    ps.setInt(4, iSubCategoryModel.isActive ? 1 : 0);
-                                    ps.setInt(5, cid);
+                                    //ps.setString(2, iSubCategoryModel.path);
+                                    ps.setString(2, iSubCategoryModel.name);
+                                    ps.setInt(3, iSubCategoryModel.isActive ? 1 : 0);
+                                    ps.setInt(4, cid);
                                     return ps;
                                 }, keyHolder);
                                 if(rowsAffected >= 1) {
@@ -422,7 +422,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(scid));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(scid));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -468,7 +468,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(scid));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(scid));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -514,7 +514,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(scid));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(scid));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -560,7 +560,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(scid));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(scid));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -605,7 +605,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    int scid = Integer.parseInt(authjwtrepository.BookidDecrypt(scId));
+                    int scid = Integer.parseInt(authjwtrepository.IdDecrypt(scId));
 
                     if (isAdmin) {
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETSUBCATEGORY.name()}, String.class);

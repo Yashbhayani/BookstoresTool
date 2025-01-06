@@ -65,7 +65,7 @@ public class ProductServices implements ProductRepository {
                                         while (rs != null && rs.next()) {
                                             ProductModel productModel = new ProductModel();
                                             try {
-                                                productModel.setPid(authjwtrepository.BookidEncrypt(rs.getInt("id")));
+                                                productModel.setPid(authjwtrepository.IdEncrypt(rs.getInt("id")));
                                             } catch (Exception e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -229,7 +229,7 @@ public class ProductServices implements ProductRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        iProductModel.Pid = authjwtrepository.BookidDecrypt(iProductModel.Pid);
+                        iProductModel.Pid = authjwtrepository.IdDecrypt(iProductModel.Pid);
                         int pid = Integer.parseInt(iProductModel.Pid);
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
@@ -279,7 +279,7 @@ public class ProductServices implements ProductRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int pid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.ProductDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -325,7 +325,7 @@ public class ProductServices implements ProductRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int pid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.ProductDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -371,7 +371,7 @@ public class ProductServices implements ProductRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int pid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.ProductIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -417,7 +417,7 @@ public class ProductServices implements ProductRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int pid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.ProductIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -462,7 +462,7 @@ public class ProductServices implements ProductRepository {
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    int pid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                    int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
 
                     if (isAdmin) {
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETPRODUCT.name()}, String.class);

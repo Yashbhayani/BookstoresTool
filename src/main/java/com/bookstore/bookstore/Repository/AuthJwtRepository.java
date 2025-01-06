@@ -15,7 +15,7 @@ public interface AuthJwtRepository {
     public String getUsernameFromToken(String token);
     public Jws<Claims> getClaims(String token);
     public boolean isTokenValid(String token);
-    public String BookidEncrypt(long bookid) throws Exception;
-    public String BookidDecrypt(String bookid) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
+    public String IdEncrypt(long bookid) throws Exception;
+    public String IdDecrypt(String bookid) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException;
 
 }

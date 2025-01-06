@@ -72,9 +72,9 @@ public class CategoryController {
     }
 
     @GetMapping ("/category/getcategory")
-    public Map<String, Object> getProductDetails(
+    public Map<String, Object> getCategoryDetails(
             @RequestHeader("token") String Token,
-            @RequestParam("cId") String cId
+            @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.getCategoryDetails(Token, cId);
     }

@@ -4,7 +4,6 @@ public class GetCategoryModel {
 
     public int sID;
     public int pID ;
-    public String path;
     public boolean isActive;
     public String name;
 
@@ -24,20 +23,12 @@ public class GetCategoryModel {
         this.pID = pID;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public String getName() {

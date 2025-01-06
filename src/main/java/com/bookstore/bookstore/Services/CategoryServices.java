@@ -68,7 +68,7 @@ public class CategoryServices implements CategoryRepository {
                                         while (rs != null && rs.next()) {
                                             CategoryTypeModel categoryTypeModel = new CategoryTypeModel();
                                             try {
-                                                categoryTypeModel.setId(authjwtrepository.BookidEncrypt(rs.getInt("CategoryID")));
+                                                categoryTypeModel.setId(authjwtrepository.IdEncrypt(rs.getInt("CategoryID")));
                                             } catch (Exception e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -346,7 +346,7 @@ public class CategoryServices implements CategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(iCategoryModel.sID));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(iCategoryModel.sID));
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
@@ -356,10 +356,9 @@ public class CategoryServices implements CategoryRepository {
                                 PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.CategoryEditQuery, Statement.RETURN_GENERATED_KEYS);
                                 ps.setInt(1, iCategoryModel.pID);
                                 //ps.setString(2, iCategoryModel.code);
-                                ps.setString(2, iCategoryModel.path);
-                                ps.setString(3, iCategoryModel.name);
-                                ps.setInt(4, iCategoryModel.isActive ? 1 : 0);
-                                ps.setInt(5, cid);
+                                ps.setString(2, iCategoryModel.name);
+                                ps.setInt(3, iCategoryModel.isActive ? 1 : 0);
+                                ps.setInt(4, cid);
                                 return ps;
                             }, keyHolder);
 
@@ -406,7 +405,7 @@ public class CategoryServices implements CategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(cId));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(cId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.CategoryDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -452,7 +451,7 @@ public class CategoryServices implements CategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(cId));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(cId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.CategoryDeleteQuery, Statement.RETURN_GENERATED_KEYS);
@@ -498,7 +497,7 @@ public class CategoryServices implements CategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.CategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -544,7 +543,7 @@ public class CategoryServices implements CategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(pId));
+                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.CategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
@@ -589,7 +588,7 @@ public class CategoryServices implements CategoryRepository {
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    int cid = Integer.parseInt(authjwtrepository.BookidDecrypt(cId));
+                    int cid = Integer.parseInt(authjwtrepository.IdDecrypt(cId));
 
                     if (isAdmin) {
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETCATEGORY.name()}, String.class);
@@ -606,8 +605,7 @@ public class CategoryServices implements CategoryRepository {
                                                 getCategoryModel.setsID(cid);
                                                 getCategoryModel.setpID(rs.getInt("producttypeID"));
                                                 getCategoryModel.setName(rs.getString("Value"));
-                                                getCategoryModel.setPath(rs.getString("path"));
-                                                getCategoryModel.setActive(rs.getBoolean("IsActive"));
+                                                getCategoryModel.setIsActive(rs.getBoolean("IsActive"));
                                             }
                                         }
                                     }
