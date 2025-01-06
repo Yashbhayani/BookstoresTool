@@ -8,7 +8,8 @@ export interface IProductSaveModel {
 export interface ICategorySaveModel{
     sID: string;
     pID: number;
-    code: string;
-    path: string;
+    code?: string;
+    path?: string;
     name: string;
+    isActive: boolean;
 }

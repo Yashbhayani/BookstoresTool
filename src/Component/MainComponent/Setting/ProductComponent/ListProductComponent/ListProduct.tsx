@@ -154,7 +154,7 @@ const ListProduct = (props: any) => {
             setSortBy(columnName);
             toggleSortOrder();
         }
-        await CallProduct(currentPage, itemsPerPage, columnName, sortOrder === 1 ? 0 : 1, IsActive, IsDeleted);
+        await CallProduct(currentPage, itemsPerPage, columnName, sortOrder, IsActive, IsDeleted);
     };
 
     const Edit = (pid: string) => {
@@ -451,10 +451,10 @@ const ListProduct = (props: any) => {
                 <thead className="table-primary">
                     <tr>
                         <th scope="col" onClick={() => handleSort('id')}>
-                            # {sortBy === 'id' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                            # {sortBy === 'id' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
-                        <th scope="col" onClick={() => handleSort('CategoryName')}>
-                            Name {sortBy === 'Name' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                        <th scope="col" onClick={() => handleSort('Name')}>
+                            Name {sortBy === 'Name' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
                         <th scope="col">Active</th>
                         <th scope="col">Delete</th>

@@ -238,10 +238,29 @@ const ProductState = (props) => {
         }
     };
 
-    const ActivetedDeleteCategoryFuncation = async (Pid) => {
+    const ActivetedCategoryFuncation = async (Pid) => {
         try {
             const response = await fetch(
-                `${apiroute.host}${apiroute.activedeletecategoryurl}?cid=${encodeURIComponent(Pid)}`,
+                `${apiroute.host}${apiroute.activecategoryurl}?cid=${encodeURIComponent(Pid)}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        token: sessionStorage.getItem("token"),
+                    },
+                }
+            );
+            const json = await response.json();
+            return json;
+        } catch (e) {
+            console.error("Error fetching data:", e);
+        }
+    };
+
+    const DeActivetedCategoryFuncation = async (Pid) => {
+        try {
+            const response = await fetch(
+                `${apiroute.host}${apiroute.deactivecategoryurl}?cid=${encodeURIComponent(Pid)}`,
                 {
                     method: "PUT",
                     headers: {
@@ -309,12 +328,50 @@ const ProductState = (props) => {
         }
     };
 
+    const GetCategoryFunction = async (cid) => {
+        try {
+            let urlWithParams = `${apiroute.host}${apiroute.getcategoryurl}?cid=${encodeURIComponent(
+                cid
+            )}`;
+            const response = await fetch(urlWithParams, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    token: sessionStorage.getItem("token"),
+                },
+            });
+            const json = await response.json();
+            return json;
+        } catch (e) {
+            console.error("Error fetching data:", e);
+        }
+    };
+
     const DeleteCategoryFuncation = async (Pid) => {
         try {
             const response = await fetch(
                 `${apiroute.host}${apiroute.deletecategoryurl}?cid=${encodeURIComponent(Pid)}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        token: sessionStorage.getItem("token"),
+                    },
+                }
+            );
+            const json = await response.json();
+            return json;
+        } catch (e) {
+            console.error("Error fetching data:", e);
+        }
+    };
+
+    const RestoreCategoryFuncation = async (Pid) => {
+        try {
+            const response = await fetch(
+                `${apiroute.host}${apiroute.restorecategoryurl}?cid=${encodeURIComponent(Pid)}`,
+                {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                         token: sessionStorage.getItem("token"),
@@ -367,7 +424,7 @@ const ProductState = (props) => {
     const ActivetedDeleteSubCategoryFuncation = async (Pid) => {
         try {
             const response = await fetch(
-                `${apiroute.host}${apiroute.activedeletesubcategoryurl}?scid=${encodeURIComponent(
+                `${apiroute.host}${apiroute.activesubcategoryurl}?scid=${encodeURIComponent(
                     Pid
                 )}`,
                 {
@@ -422,11 +479,14 @@ const ProductState = (props) => {
                 CategoryCodeFunction,
                 CategoryPathFunction,
                 SelectCategoryListFunction,
+                GetCategoryFunction,
                 SaveCategoryFuncation,
                 UpdateCategoryFuncation,
                 DeleteCategoryFuncation,
-                ActivetedDeleteCategoryFuncation,
-
+                ActivetedCategoryFuncation,
+                RestoreCategoryFuncation,
+                DeActivetedCategoryFuncation,
+                
                 //SubCategory
                 SubCategoryFunction,
                 DeleteSubCategoryFuncation,

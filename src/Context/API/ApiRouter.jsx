@@ -18,18 +18,25 @@ export const deactiveproducturl = "product/deactive"
 
 //category
 export const categoryurl = "category/list";
+export const getcategoryurl = "category/getcategory";
 export const categorycodeurl = "category/code-verify";
 export const categorycodepath = "category/path-verify";
 export const savecategoryurl = "category/save";
 export const deletecategoryurl = "category/delete";
-export const activedeletecategoryurl = "category/active-deleted-category";
+export const restorecategoryurl = "category/restore";
+export const activecategoryurl = "category/active";
+export const deactivecategoryurl = "category/deactive";
 export const updatecategoryurl = "category/update";
 
 //subcategory
 export const subcategoryurl = "subcategory/list";
+export const subcategorycodeurl = "subcategory/code-verify";
+export const subcategorycodepath = "subcategory/path-verify";
 export const deletesubcategoryurl = "subcategory/delete";
-export const activedeletesubcategoryurl = "subcategory/active-deleted-subcategory";
+export const activesubcategoryurl = "subcategory/active";
 export const updatesubcategoryurl = "subcategory/update";
+export const restoresubcategoryurl = "subcategory/restore";
+export const deactivesubcategoryurl = "subcategory/deactive";
 
 
 //selct list for all

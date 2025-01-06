@@ -1,24 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import AuthContext from '../../../../../Context/Auth/AuthContext';
-import toast from 'react-hot-toast';
-import PageTitle from '../../../../../PageTitle/PageTitle';
-import { IProductSaveModel } from '../../../../../models/savemodel';
-import { DebounceInput } from 'react-debounce-input';
-import Productcontex from '../../../../../Context/Product/ProductContext';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import AuthContext from "../../../../../Context/Auth/AuthContext";
+import toast from "react-hot-toast";
+import PageTitle from "../../../../../PageTitle/PageTitle";
+import { IProductSaveModel } from "../../../../../models/savemodel";
+import { DebounceInput } from "react-debounce-input";
+import Productcontex from "../../../../../Context/Product/ProductContext";
 
 const EditProduct = (props: any) => {
   let { id } = useParams<string>();
   const context = useContext(AuthContext);
   const ProductContext = useContext(Productcontex);
   const { CheckuserFunction } = context;
-  const { ProductCodeFunction, UpdateProductFuncation, GetProductFunction } = ProductContext;
+  const { ProductCodeFunction, UpdateProductFuncation, GetProductFunction } =
+    ProductContext;
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [isChecked, setIsChecked] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({
-    code: '',
-    name: '',
+    code: "",
+    name: "",
   });
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const EditProduct = (props: any) => {
     if (token) {
       CallCheckuser();
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }, []);
 
@@ -39,17 +40,17 @@ const EditProduct = (props: any) => {
         if (response.data) {
           GetProductData();
         } else {
-          navigate('/');
+          navigate("/");
         }
       } else {
-        navigate('/');
+        navigate("/");
       }
     } catch {
       toast.error("Server is not working", {
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
         },
         duration: 2000,
       });
@@ -61,19 +62,21 @@ const EditProduct = (props: any) => {
   const GetProductData = async () => {
     props.setLoading(true);
     try {
-      const response = await GetProductFunction(decodeURIComponent(id as string));
+      const response = await GetProductFunction(
+        decodeURIComponent(id as string)
+      );
       if (response.Success === true && response.data) {
         setName(response.data.name);
         setIsChecked(response.data.active);
       } else {
-        navigate('/');
+        navigate("/");
       }
     } catch {
       toast.error("Server is not working", {
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
         },
         duration: 2000,
       });
@@ -82,13 +85,13 @@ const EditProduct = (props: any) => {
     }
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     props.setLoading(true);
 
     if (!name.trim()) {
       setErrors({
-        name: !name.trim() ? 'Name is required' : '',
+        name: !name.trim() ? "Name is required" : "",
       });
       props.setLoading(false);
       return;
@@ -105,9 +108,9 @@ const EditProduct = (props: any) => {
       if (response.Success) {
         toast.success(response.Message, {
           style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
           },
           duration: 2000,
         });
@@ -115,19 +118,19 @@ const EditProduct = (props: any) => {
       } else {
         toast.error(response.Message, {
           style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
           },
-          duration: 2000, 
+          duration: 2000,
         });
       }
     } catch {
       toast.error("Server is not working", {
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
         },
         duration: 2000,
       });
@@ -142,20 +145,20 @@ const EditProduct = (props: any) => {
       if (response.data) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          code: '',
+          code: "",
         }));
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          code: 'Code is already added',
+          code: "Code is already added",
         }));
       }
     } catch {
       toast.error("Server is not working", {
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
         },
         duration: 2000,
       });
@@ -166,9 +169,9 @@ const EditProduct = (props: any) => {
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-//    setCode(value.toUpperCase().replace(/\s/g, ''));
+    //    setCode(value.toUpperCase().replace(/\s/g, ''));
     props.setLoading(true);
-    CheckCode(value.toUpperCase().replace(/\s/g, ''));
+    CheckCode(value.toUpperCase().replace(/\s/g, ""));
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,7 +179,7 @@ const EditProduct = (props: any) => {
     setName(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      name: '',
+      name: "",
     }));
   };
 
@@ -185,9 +188,8 @@ const EditProduct = (props: any) => {
   };
 
   const back = () => {
-    navigate('/product');
+    navigate("/product");
   };
-
 
   return (
     <div>
@@ -196,28 +198,42 @@ const EditProduct = (props: any) => {
       <form onSubmit={handleSubmit}>
         <div className="row g-3">
           <div className="col-md-6">
-            <label htmlFor="inputName" className="form-label">Name</label>
+            <label htmlFor="inputName" className="form-label">
+              Name
+            </label>
             <input
               type="text"
-              className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.name ? "is-invalid" : ""}`}
               id="inputName"
               value={name}
               onChange={handleNameChange}
             />
-            {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+            {errors.name && (
+              <div className="invalid-feedback">{errors.name}</div>
+            )}
           </div>
           <div className="col-md-6">
-            <label htmlFor="inputName" className="form-label">Is Active Product Or Not</label>
-            <label className="switch m-2">
-              <input type="checkbox" checked={isChecked} onChange={handleToggle} />
-              <span className="slider round"></span>
+            <label className="form-label" htmlFor="inputName">
+              Is Active
             </label>
+            <div>
+              <label className="switch m-2">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={handleToggle}
+                />
+                <span className="slider round"></span>
+              </label>
+            </div>
           </div>
         </div>
-        <button type="submit" className="btn btn-outline-primary m-3">Submit</button>
+        <button type="submit" className="btn btn-outline-primary m-3">
+          Submit
+        </button>
       </form>
     </div>
   );
-}
+};
 
 export default EditProduct;

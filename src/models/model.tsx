@@ -31,7 +31,7 @@ export interface ISubcategoryModel {
 }
 
 
-export interface IProductSelectList{
+export interface ISelectModel{
     id: number;
     name: string;
 }

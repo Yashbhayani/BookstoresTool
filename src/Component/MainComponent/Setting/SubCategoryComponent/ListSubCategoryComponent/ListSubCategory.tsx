@@ -133,7 +133,7 @@ const ListSubCategory = (props: any) => {
     };
 
     const addCategory = () => {
-        navigate('/product/save');
+        navigate('/subcategory/save');
     };
 
     // Function to toggle sorting order
@@ -148,7 +148,7 @@ const ListSubCategory = (props: any) => {
             setSortBy(columnName);
             toggleSortOrder();
         }
-        await CallSubCategory(currentPage, itemsPerPage, columnName, sortOrder === 1 ? 0 : 1, IsActive, IsDeleted);
+        await CallSubCategory(currentPage, itemsPerPage, columnName, sortOrder, IsActive, IsDeleted);
     };
     
     const handleActive = async (lid: string) => {
@@ -305,21 +305,21 @@ const ListSubCategory = (props: any) => {
                 <thead className="table-primary">
                     <tr>
                         <th scope="col" onClick={() => handleSort('id')}>
-                            # {sortBy === 'id' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                            # {sortBy === 'id' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
                         <th scope="col" onClick={() => handleSort('ProductName')}>
-                            Product Name {sortBy === 'ProductName' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}</th>
+                            Product Name {sortBy === 'ProductName' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}</th>
                         <th scope="col" onClick={() => handleSort('CategoryName')}>
-                            Category Name {sortBy === 'CategoryName' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                            Category Name {sortBy === 'CategoryName' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
-                        <th scope="col">SubCategory Code</th>
-                        <th scope="col" onClick={() => handleSort('CategoryPath')}>
-                            SubCategory Path {sortBy === 'CategoryPath' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                        <th scope="col" onClick={() => handleSort('SubCategoryPath')}>
+                            SubCategory Path {sortBy === 'SubCategoryPath' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
                         <th scope="col" onClick={() => handleSort('SubCategoryValue')}>
-                            SubCategory Value {sortBy === 'SubCategoryValue' && <span>{sortOrder === 0 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
+                            SubCategory Value {sortBy === 'SubCategoryValue' && <span>{sortOrder === 1 ? <i className="bi bi-arrow-up"></i> : <i className="bi bi-arrow-down"></i>}</span>}
                         </th>
                         <th scope="col"> Active </th>
+                        <th scope="col"> Delete </th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -329,11 +329,17 @@ const ListSubCategory = (props: any) => {
                             <th scope="row">{(currentPage - 1) * itemsPerPage + (index + 1)}</th>
                             <td>{subcategory.productName}</td>
                             <td>{subcategory.categoryName}</td>
-                            <td>{subcategory.subCategoryCode}</td>
                             <td>{subcategory.subCategoryPath}</td>
                             <td>{subcategory.subCategoryValue}</td>
                             <td>
                                 {subcategory.active ? (
+                                    <span role="img" aria-label="Active">&#128994;</span>
+                                ) : (
+                                    <span role="img" aria-label="Inactive">&#128308;</span>
+                                )}
+                            </td>
+                            <td>
+                                {subcategory.delete ? (
                                     <span role="img" aria-label="Active">&#128994;</span>
                                 ) : (
                                     <span role="img" aria-label="Inactive">&#128308;</span>

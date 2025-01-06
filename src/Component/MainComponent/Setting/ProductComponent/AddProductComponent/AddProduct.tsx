@@ -94,6 +94,7 @@ const AddProduct = (props: any) => {
         if (response.Success) {
             setCode('');
             setName('');
+            setIsChecked(true);
             setErrors({
                 code: '',
                 name: '',

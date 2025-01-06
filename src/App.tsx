@@ -26,6 +26,7 @@ import path from "path";
 import AddCategory from "./Component/MainComponent/Setting/CategoryComponent/AddCategoryComponent/AddCategory";
 import EditProduct from "./Component/MainComponent/Setting/ProductComponent/EditProductComponent/EditProduct";
 import EditCategory from "./Component/MainComponent/Setting/CategoryComponent/EditCategoryComponent/EditCategory";
+import AddSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/AddSubCategoryComponent/AddSubCategory";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -61,6 +62,7 @@ function App() {
           <Route path="/category/save" element={<Header setLoading={setLoading}><AddCategory setLoading={setLoading} /></Header>} />
           <Route path="/category/edit/:id" element={<Header setLoading={setLoading}><EditCategory setLoading={setLoading} /></Header>} />
           <Route path="/subcategory" element={<Header setLoading={setLoading}><ListSubCategory setLoading={setLoading} /></Header>} />
+          <Route path="/subcategory/save" element={<Header setLoading={setLoading}><AddSubCategory setLoading={setLoading} /></Header>} />
           <Route path="/dashboard" element={<Header setLoading={setLoading}><Dashboard /></Header>} />
           <Route path="/books" element={<Header setLoading={setLoading}><Books /></Header>} />
           <Route path="/book/:id" element={<Header setLoading={setLoading}><Book /></Header>} />
