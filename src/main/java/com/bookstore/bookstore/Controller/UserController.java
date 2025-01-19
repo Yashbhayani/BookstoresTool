@@ -66,6 +66,7 @@ public class UserController {
             @RequestHeader("token") String Token){
         return  userrepository.Checkuser(Token);
     }
+
     @GetMapping(value = "/checkPass/{pass}")
     public Map<String, Object> checkPass(@RequestBody String pass){
         return  userrepository.checkPass(pass);

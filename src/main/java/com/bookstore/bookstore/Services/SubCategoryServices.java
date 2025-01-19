@@ -1,15 +1,11 @@
 package com.bookstore.bookstore.Services;
 
 import com.bookstore.bookstore.CommonModel.CommonQueryServicesModel;
-import com.bookstore.bookstore.CustomModel.ListModel.Category.CategoryTypesModel;
-import com.bookstore.bookstore.CustomModel.ListModel.SubCategory.SubCategoryTypesModel;
-import com.bookstore.bookstore.CustomModel.Model.CategoryTypeModel;
-import com.bookstore.bookstore.CustomModel.Model.GetCategoryModel;
 import com.bookstore.bookstore.CustomModel.Model.GetSubCategoryModel;
-import com.bookstore.bookstore.CustomModel.Model.SubCategoryTypeModel;
 import com.bookstore.bookstore.EntityModels.ISubCategoryModel;
 import com.bookstore.bookstore.Enum.ProjectCodes;
 import com.bookstore.bookstore.Repository.AuthJwtRepository;
+import com.bookstore.bookstore.Repository.ReportRepository;
 import com.bookstore.bookstore.Repository.SubCategoryRepository;
 import com.bookstore.bookstore.SelectModel.ISelectModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +18,8 @@ import org.springframework.stereotype.Service;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
@@ -34,84 +28,43 @@ public class SubCategoryServices implements SubCategoryRepository {
     private JdbcTemplate jdbcTemplate;
     public String SpResult = null;
     private final AuthJwtRepository authjwtrepository;
-    public SubCategoryServices(AuthJwtRepository authjwtrepository) {
+    private final ReportRepository reportRepository;
+    public SubCategoryServices(AuthJwtRepository authjwtrepository, ReportRepository reportRepository) {
         this.authjwtrepository = authjwtrepository;
+        this.reportRepository = reportRepository;
     }
     CommonQueryServicesModel commonQueryServicesModel = new CommonQueryServicesModel();
 
     @Override
     public Map<String, Object> getSubCategory(String Token, String report) {
         Map<String, Object> response = new HashMap<>();
-        try{
-            if (authjwtrepository.isTokenValid(Token)) {
-                String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
-                String userRoleResult = (String) result.get("Result");
-                if (userRoleResult != null) {
-                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ReportCods.ALLSUBCATEGORYTYPES.name()}, String.class);
-                        var subCategoryList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<SubCategoryTypesModel>) callableStatement -> {
-                                SubCategoryTypesModel subCategoryTypesModel = new SubCategoryTypesModel();
-                                callableStatement.setString(1, report);
-                                boolean hasResults = callableStatement.execute();
-                                if (hasResults) {
-                                    try (ResultSet rs = callableStatement.getResultSet()) {
-                                        if (rs != null && rs.next()) {
-                                            subCategoryTypesModel.setSubCategoryCount(rs.getInt("total_SubCategory"));
-                                        }
-                                    }
-
-                                    // Second result set: product details
-                                    if (callableStatement.getMoreResults()) {
-                                        try (ResultSet rs = callableStatement.getResultSet()) {
-                                            List<SubCategoryTypeModel> subCategoryTypeModels = new ArrayList<>();
-                                            while (rs != null && rs.next()) {
-                                                SubCategoryTypeModel subCategoryTypeModel = new SubCategoryTypeModel();
-                                                try {
-                                                    subCategoryTypeModel.setSubCategoryId(authjwtrepository.IdEncrypt(rs.getInt("SubCategoryID")));
-                                                } catch (Exception e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                                subCategoryTypeModel.setProductName(rs.getString("ProductName"));
-                                                subCategoryTypeModel.setCategoryName(rs.getString("CategoryName"));
-                                                //subCategoryTypeModel.setSubCategoryCode(rs.getString("SubCategoryCode"));
-                                                subCategoryTypeModel.setSubCategoryPath(rs.getString("SubCategoryPath"));
-                                                subCategoryTypeModel.setSubCategoryValue(rs.getString("SubCategoryValue"));
-                                                subCategoryTypeModel.setActive(rs.getBoolean("IsActive"));
-                                                subCategoryTypeModels.add(subCategoryTypeModel);
-                                            }
-                                            subCategoryTypesModel.setSubCategoryTypeModels(subCategoryTypeModels);
-                                        }
-                                    }
-                                }
-                                return subCategoryTypesModel;
-                        });
-                        if (subCategoryList != null ) {
-                            response.put("data", subCategoryList);
-                            response.put("Success", true);
-                            response.put("Code", 200);
-                        } else {
-                            response.put("Message", "subCategoryList List not found for the specified language.");
-                            response.put("Success", false);
-                        }
-
-                    }
-                    else {
-                        response.put("Message", "User is Not valid");
-                        response.put("Success", false);
-                    }
-
-                }else {
-                    response.put("Message", "User is Not valid");
-                    response.put("Success", false);
-                }
-            }else {
+        try {
+            // Check if the token is valid
+            if (!authjwtrepository.isTokenValid(Token)) {
                 response.put("Message", "User is Not valid");
                 response.put("Success", false);
+                return response;
             }
-        }catch (Exception e){
+
+            // Get username from the token
+            String username = authjwtrepository.getUsernameFromToken(Token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> subCategoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLSUBCATEGORYTYPES.name(),report);
+            if (subCategoryResponse.containsKey("Success") && (boolean) subCategoryResponse.get("Success")) {
+                response.put("data", subCategoryResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", subCategoryResponse.get("Message"));
+                response.put("Success", false);
+            }
+        } catch (Exception e) {
             response.put("Message", e.getMessage());
             response.put("Success", false);
         }
@@ -356,7 +309,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        int cid = Integer.parseInt(authjwtrepository.IdDecrypt(iSubCategoryModel.scID));
+                        int scid = Integer.parseInt(authjwtrepository.IdDecrypt(iSubCategoryModel.scID));
                         SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
@@ -368,12 +321,12 @@ public class SubCategoryServices implements SubCategoryRepository {
                                 KeyHolder keyHolder = new GeneratedKeyHolder();
                                 long rowsAffected = jdbcTemplate.update(connection -> {
                                     PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryEditQuery, Statement.RETURN_GENERATED_KEYS);
-                                    ps.setInt(1, iSubCategoryModel.pID);
+                                    ps.setInt(1, iSubCategoryModel.cID);
                                     //ps.setString(2, iSubCategoryModel.code);
                                     //ps.setString(2, iSubCategoryModel.path);
                                     ps.setString(2, iSubCategoryModel.name);
                                     ps.setInt(3, iSubCategoryModel.isActive ? 1 : 0);
-                                    ps.setInt(4, cid);
+                                    ps.setInt(4, scid);
                                     return ps;
                                 }, keyHolder);
                                 if(rowsAffected >= 1) {
@@ -519,7 +472,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
                             ps.setInt(1, 0);
-                            ps.setInt(3, cid);
+                            ps.setInt(2, cid);
                             return ps;
                         }, keyHolder);
                         if(rowsAffected > 0) {
@@ -564,8 +517,8 @@ public class SubCategoryServices implements SubCategoryRepository {
                         KeyHolder keyHolder = new GeneratedKeyHolder();
                         long rowsAffected = jdbcTemplate.update(connection -> {
                             PreparedStatement ps = connection.prepareStatement(commonQueryServicesModel.SubCategoryIsActiveQuery, Statement.RETURN_GENERATED_KEYS);
-                            ps.setInt(1, 0);
-                            ps.setInt(3, cid);
+                            ps.setInt(1, 1);
+                            ps.setInt(2, cid);
                             return ps;
                         }, keyHolder);
                         if(rowsAffected > 0) {
@@ -656,3 +609,167 @@ public class SubCategoryServices implements SubCategoryRepository {
         return response;
     }
 }
+
+/*
+@Override
+    public Map<String, Object> getSubCategory(String Token, String report) {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            if (authjwtrepository.isTokenValid(Token)) {
+                String username = authjwtrepository.getUsernameFromToken(Token);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
+                String userRoleResult = (String) result.get("Result");
+                if (userRoleResult != null) {
+                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
+                    if (isAdmin) {
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ReportCods.ALLSUBCATEGORYTYPES.name()}, String.class);
+                        var subCategoryList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<SubCategoryTypesModel>) callableStatement -> {
+                                SubCategoryTypesModel subCategoryTypesModel = new SubCategoryTypesModel();
+                                callableStatement.setString(1, report);
+                                boolean hasResults = callableStatement.execute();
+                                if (hasResults) {
+                                    try (ResultSet rs = callableStatement.getResultSet()) {
+                                        if (rs != null && rs.next()) {
+                                            subCategoryTypesModel.setSubCategoryCount(rs.getInt("total_SubCategory"));
+                                        }
+                                    }
+
+                                    // Second result set: product details
+                                    if (callableStatement.getMoreResults()) {
+                                        try (ResultSet rs = callableStatement.getResultSet()) {
+                                            List<SubCategoryTypeModel> subCategoryTypeModels = new ArrayList<>();
+                                            while (rs != null && rs.next()) {
+                                                SubCategoryTypeModel subCategoryTypeModel = new SubCategoryTypeModel();
+                                                try {
+                                                    subCategoryTypeModel.setSubCategoryId(authjwtrepository.IdEncrypt(rs.getInt("SubCategoryID")));
+                                                } catch (Exception e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                                subCategoryTypeModel.setProductName(rs.getString("ProductName"));
+                                                subCategoryTypeModel.setCategoryName(rs.getString("CategoryName"));
+                                                //subCategoryTypeModel.setSubCategoryCode(rs.getString("SubCategoryCode"));
+                                                subCategoryTypeModel.setSubCategoryPath(rs.getString("SubCategoryPath"));
+                                                subCategoryTypeModel.setSubCategoryValue(rs.getString("SubCategoryValue"));
+                                                subCategoryTypeModel.setActive(rs.getBoolean("IsActive"));
+                                                subCategoryTypeModel.setDelete(rs.getBoolean("IsDeleted"));
+                                                subCategoryTypeModels.add(subCategoryTypeModel);
+                                            }
+                                            subCategoryTypesModel.setSubCategoryTypeModels(subCategoryTypeModels);
+                                        }
+                                    }
+                                }
+                                return subCategoryTypesModel;
+                        });
+                        if (subCategoryList != null ) {
+                            response.put("data", subCategoryList);
+                            response.put("Success", true);
+                            response.put("Code", 200);
+                        } else {
+                            response.put("Message", "subCategoryList List not found for the specified language.");
+                            response.put("Success", false);
+                        }
+
+                    }
+                    else {
+                        response.put("Message", "User is Not valid");
+                        response.put("Success", false);
+                    }
+
+                }else {
+                    response.put("Message", "User is Not valid");
+                    response.put("Success", false);
+                }
+            }else {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+            }
+        }catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
+
+*/
+
+/*@Override
+    public Map<String, Object> getSubCategory(String Token, String report) {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            if (authjwtrepository.isTokenValid(Token)) {
+                String username = authjwtrepository.getUsernameFromToken(Token);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
+                String userRoleResult = (String) result.get("Result");
+                if (userRoleResult != null) {
+                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
+                    if (isAdmin) {
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ReportCods.ALLSUBCATEGORYTYPES.name()}, String.class);
+                        var subCategoryList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<SubCategoryTypesModel>) callableStatement -> {
+                                SubCategoryTypesModel subCategoryTypesModel = new SubCategoryTypesModel();
+                                callableStatement.setString(1, report);
+                                boolean hasResults = callableStatement.execute();
+                                if (hasResults) {
+                                    try (ResultSet rs = callableStatement.getResultSet()) {
+                                        if (rs != null && rs.next()) {
+                                            subCategoryTypesModel.setSubCategoryCount(rs.getInt("total_SubCategory"));
+                                        }
+                                    }
+
+                                    // Second result set: product details
+                                    if (callableStatement.getMoreResults()) {
+                                        try (ResultSet rs = callableStatement.getResultSet()) {
+                                            List<SubCategoryTypeModel> subCategoryTypeModels = new ArrayList<>();
+                                            while (rs != null && rs.next()) {
+                                                SubCategoryTypeModel subCategoryTypeModel = new SubCategoryTypeModel();
+                                                try {
+                                                    subCategoryTypeModel.setSubCategoryId(authjwtrepository.IdEncrypt(rs.getInt("SubCategoryID")));
+                                                } catch (Exception e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                                subCategoryTypeModel.setProductName(rs.getString("ProductName"));
+                                                subCategoryTypeModel.setCategoryName(rs.getString("CategoryName"));
+                                                //subCategoryTypeModel.setSubCategoryCode(rs.getString("SubCategoryCode"));
+                                                subCategoryTypeModel.setSubCategoryPath(rs.getString("SubCategoryPath"));
+                                                subCategoryTypeModel.setSubCategoryValue(rs.getString("SubCategoryValue"));
+                                                subCategoryTypeModel.setActive(rs.getBoolean("IsActive"));
+                                                subCategoryTypeModel.setDelete(rs.getBoolean("IsDeleted"));
+                                                subCategoryTypeModels.add(subCategoryTypeModel);
+                                            }
+                                            subCategoryTypesModel.setSubCategoryTypeModels(subCategoryTypeModels);
+                                        }
+                                    }
+                                }
+                                return subCategoryTypesModel;
+                        });
+                        if (subCategoryList != null ) {
+                            response.put("data", subCategoryList);
+                            response.put("Success", true);
+                            response.put("Code", 200);
+                        } else {
+                            response.put("Message", "subCategoryList List not found for the specified language.");
+                            response.put("Success", false);
+                        }
+
+                    }
+                    else {
+                        response.put("Message", "User is Not valid");
+                        response.put("Success", false);
+                    }
+
+                }else {
+                    response.put("Message", "User is Not valid");
+                    response.put("Success", false);
+                }
+            }else {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+            }
+        }catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
+*/

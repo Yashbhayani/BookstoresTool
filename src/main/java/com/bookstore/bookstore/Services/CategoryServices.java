@@ -9,6 +9,7 @@ import com.bookstore.bookstore.EntityModels.ICategoryModel;
 import com.bookstore.bookstore.Enum.ProjectCodes;
 import com.bookstore.bookstore.Repository.AuthJwtRepository;
 import com.bookstore.bookstore.Repository.CategoryRepository;
+import com.bookstore.bookstore.Repository.ReportRepository;
 import com.bookstore.bookstore.SelectModel.ISelectModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
@@ -28,92 +29,51 @@ public class CategoryServices implements CategoryRepository {
     private JdbcTemplate jdbcTemplate;
     public String SpResult = null;
     private final AuthJwtRepository authjwtrepository;
+    private final ReportRepository reportRepository;
+
     CommonQueryServicesModel commonQueryServicesModel = new CommonQueryServicesModel();
 
-    public CategoryServices(AuthJwtRepository authjwtrepository) {
+    public CategoryServices(AuthJwtRepository authjwtrepository, ReportRepository reportRepository) {
         this.authjwtrepository = authjwtrepository;
+        this.reportRepository = reportRepository;
     }
 
+    @Override
     public Map<String, Object> getCategory(String Token, String report) {
         Map<String, Object> response = new HashMap<>();
-        try{
-            if (authjwtrepository.isTokenValid(Token)) {
-                String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
-                String userRoleResult = (String) result.get("Result");
-                if (userRoleResult != null) {
-                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ReportCods.ALLCATEGORYTYPES.name()}, String.class);
-                        var categoryList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<CategoryTypesModel>) callableStatement -> {
-                            CategoryTypesModel categoryTypesModel = new CategoryTypesModel();
-                            callableStatement.setString(1, report);
-                            boolean hasResults = callableStatement.execute();
-
-                            if (hasResults) {
-                                try (ResultSet rs = callableStatement.getResultSet()) {
-                                    /* ResultSetMetaData metaData = rs.getMetaData();
-                                    int totalColumn = metaData.getColumnCount();
-                                    System.out.println(totalColumn);*/
-                                    if (rs != null && rs.next()) {
-                                        categoryTypesModel.setCategoryCount(rs.getInt("total_Categorys"));
-                                    }
-                                }
-
-                                // Second result set: product details
-                                if (callableStatement.getMoreResults()) {
-                                    try (ResultSet rs = callableStatement.getResultSet()) {
-                                        List<CategoryTypeModel> categoryTypeModels = new ArrayList<>();
-                                        while (rs != null && rs.next()) {
-                                            CategoryTypeModel categoryTypeModel = new CategoryTypeModel();
-                                            try {
-                                                categoryTypeModel.setId(authjwtrepository.IdEncrypt(rs.getInt("CategoryID")));
-                                            } catch (Exception e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                            categoryTypeModel.setProductName(rs.getString("ProductName"));
-                                            categoryTypeModel.setCategoryValue(rs.getString("CategoryValue"));
-                                            categoryTypeModel.setCategoryPath(rs.getString("CategoryPath"));
-                                            categoryTypeModel.setIsActive(rs.getBoolean("IsActive"));
-                                            categoryTypeModel.setIsDeleted(rs.getBoolean("IsDeleted"));
-                                            categoryTypeModels.add(categoryTypeModel);
-                                        }
-                                        categoryTypesModel.setCategoryTypeModels(categoryTypeModels);
-                                    }
-                                }
-                            }
-                            return categoryTypesModel;
-                        });
-                        if (categoryList != null ) {
-                            response.put("data", categoryList);
-                            response.put("Success", true);
-                            response.put("Code", 200);
-                        } else {
-                            response.put("Message", "CategoryList List not found for the specified language.");
-                            response.put("Success", false);
-                        }
-                    }
-                    else {
-                        response.put("Message", "User is Not valid");
-                        response.put("Success", false);
-                    }
-                }else {
-                    response.put("Message", "User is Not valid");
-                    response.put("Success", false);
-                }
-            }
-            else {
+        try {
+            // Check if the token is valid
+            if (!authjwtrepository.isTokenValid(Token)) {
                 response.put("Message", "User is Not valid");
                 response.put("Success", false);
+                return response;
             }
-        }
-        catch (Exception e){
+
+            // Get username from the token
+            String username = authjwtrepository.getUsernameFromToken(Token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLCATEGORYTYPES.name(),report);
+            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
+                response.put("data", productResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", productResponse.get("Message"));
+                response.put("Success", false);
+            }
+        } catch (Exception e) {
             response.put("Message", e.getMessage());
             response.put("Success", false);
         }
         return response;
     }
+
 
     @Override
     public Map<String, Object> getselectCategorylist(String token, int Pid) {
@@ -638,3 +598,84 @@ public class CategoryServices implements CategoryRepository {
     }
 
 }
+
+/*
+    @Override
+    public Map<String, Object> getCategory(String Token, String report) {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            if (authjwtrepository.isTokenValid(Token)) {
+                String username = authjwtrepository.getUsernameFromToken(Token);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
+                String userRoleResult = (String) result.get("Result");
+                if (userRoleResult != null) {
+                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
+                    if (isAdmin) {
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ReportCods.ALLCATEGORYTYPES.name()}, String.class);
+                        var categoryList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<CategoryTypesModel>) callableStatement -> {
+                            CategoryTypesModel categoryTypesModel = new CategoryTypesModel();
+                            callableStatement.setString(1, report);
+                            boolean hasResults = callableStatement.execute();
+
+                            if (hasResults) {
+                                try (ResultSet rs = callableStatement.getResultSet()) {
+                                    if (rs != null && rs.next()) {
+                                        categoryTypesModel.setCategoryCount(rs.getInt("total_Categorys"));
+                                    }
+                                }
+
+                                // Second result set: product details
+                                if (callableStatement.getMoreResults()) {
+                                    try (ResultSet rs = callableStatement.getResultSet()) {
+                                        List<CategoryTypeModel> categoryTypeModels = new ArrayList<>();
+                                        while (rs != null && rs.next()) {
+                                            CategoryTypeModel categoryTypeModel = new CategoryTypeModel();
+                                            try {
+                                                categoryTypeModel.setId(authjwtrepository.IdEncrypt(rs.getInt("CategoryID")));
+                                            } catch (Exception e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                            categoryTypeModel.setProductName(rs.getString("ProductName"));
+                                            categoryTypeModel.setCategoryValue(rs.getString("CategoryValue"));
+                                            categoryTypeModel.setCategoryPath(rs.getString("CategoryPath"));
+                                            categoryTypeModel.setIsActive(rs.getBoolean("IsActive"));
+                                            categoryTypeModel.setIsDeleted(rs.getBoolean("IsDeleted"));
+                                            categoryTypeModels.add(categoryTypeModel);
+                                        }
+                                        categoryTypesModel.setCategoryTypeModels(categoryTypeModels);
+                                    }
+                                }
+                            }
+                            return categoryTypesModel;
+                        });
+                        if (categoryList != null ) {
+                            response.put("data", categoryList);
+                            response.put("Success", true);
+                            response.put("Code", 200);
+                        } else {
+                            response.put("Message", "CategoryList List not found for the specified language.");
+                            response.put("Success", false);
+                        }
+                    }
+                    else {
+                        response.put("Message", "User is Not valid");
+                        response.put("Success", false);
+                    }
+                }else {
+                    response.put("Message", "User is Not valid");
+                    response.put("Success", false);
+                }
+            }
+            else {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+            }
+        }
+        catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
+*/

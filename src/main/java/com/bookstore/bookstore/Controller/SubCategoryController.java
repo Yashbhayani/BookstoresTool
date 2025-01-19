@@ -51,7 +51,7 @@ public class SubCategoryController {
     @GetMapping("/subcategory/path-verify")
     public  Map<String, Object> SubCategoryPath(
             @RequestHeader("token") String Token,
-            @RequestParam("code") String Code
+            @RequestParam("path") String Code
     ) throws IOException{
         return subCategoryRepository.getSubCategoryPath(Token, Code);
     }
@@ -80,7 +80,7 @@ public class SubCategoryController {
         return  subCategoryRepository.delete(Token, scid);
     }
 
-    @DeleteMapping("/subcategory/reStore")
+    @PutMapping("/subcategory/restore")
     public Map<String, Object> ReStore(
             @RequestHeader("token") String Token,
             @RequestParam("scid") String scid
@@ -88,7 +88,7 @@ public class SubCategoryController {
         return  subCategoryRepository.reStore(Token, scid);
     }
 
-    @GetMapping ("/subcategory/getSubategory")
+    @GetMapping ("/subcategory/getsubategory")
     public Map<String, Object> getSubategoryDetails(
             @RequestHeader("token") String Token,
             @RequestParam("scid") String scId
@@ -97,7 +97,7 @@ public class SubCategoryController {
     }
 
     @PutMapping("/subcategory/deactive")
-    public Map<String, Object> ActiveDelete(
+    public Map<String, Object> Deactive(
             @RequestHeader("token") String Token,
             @RequestParam("scid") String cId
     ) throws IOException {

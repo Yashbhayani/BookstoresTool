@@ -44,5 +44,10 @@ public class BookstoreApplication implements WebMvcConfigurer {
 				.allowedOrigins("*") // allow all origins
 				.allowedMethods("*") // allow all HTTP methods
 				.allowedHeaders("*"); // allow all headers
+
 	}
+
+
+
+
 }

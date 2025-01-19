@@ -10,7 +10,7 @@ public class CommonQueryServicesModel {
     public String ProductDeleteQuery= "UPDATE producttypetable SET IsDeleted = ? WHERE id = ?;";
     public String ProductIsActiveQuery= "UPDATE producttypetable SET IsActive = ? WHERE id = ?;";
 
-    public String CategorySaveQuery = "INSERT INTO categorytypetable (producttypeID, Code, path, Value, IsActive) VALUES (?, ?, ?, ?, ?);";
+    public String CategorySaveQuery = "INSERT INTO cate gorytypetable (producttypeID, Code, path, Value, IsActive) VALUES (?, ?, ?, ?, ?);";
     //public String CategoryEditQuery = "UPDATE categorytypetable SET producttypeID = ?, Code = ?, path = ?, Value = ?, IsActive = ? WHERE Id = ?;";
     public String CategoryEditQuery = "UPDATE categorytypetable SET producttypeID = ?, Value = ?, IsActive = ? WHERE Id = ?;";
     public String CategoryDeleteQuery = "UPDATE categorytypetable SET IsDeleted = ? WHERE Id = ?;";

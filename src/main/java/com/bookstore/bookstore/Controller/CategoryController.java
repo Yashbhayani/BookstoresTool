@@ -50,7 +50,7 @@ public class CategoryController {
     @GetMapping("/category/path-verify")
     public  Map<String, Object> CategoryPath(
             @RequestHeader("token") String Token,
-            @RequestParam("code") String Code
+            @RequestParam("path") String Code
     ) throws IOException{
         return categoryRepository.getCategoryPath(Token, Code);
     }
