@@ -58,13 +58,13 @@ public class CategoryServices implements CategoryRepository {
                 return response;
             }
 
-            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLCATEGORYTYPES.name(),report);
-            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
-                response.put("data", productResponse.get("data"));
+            Map<String, Object> categoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLCATEGORYTYPES.name(),report);
+            if (categoryResponse.containsKey("Success") && (boolean) categoryResponse.get("Success")) {
+                response.put("data", categoryResponse.get("data"));
                 response.put("Success", true);
                 response.put("Code", 200);
             } else {
-                response.put("Message", productResponse.get("Message"));
+                response.put("Message", categoryResponse.get("Message"));
                 response.put("Success", false);
             }
         } catch (Exception e) {
