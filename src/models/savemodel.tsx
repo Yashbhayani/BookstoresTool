@@ -13,3 +13,14 @@ export interface ICategorySaveModel{
     name: string;
     isActive: boolean;
 }
+
+
+export interface ISubCategorySaveModel{
+    scID: string;
+    pID: number;
+    cID: number;
+    code?: string;
+    path?: string;
+    name: string;
+    isActive: boolean;
+}

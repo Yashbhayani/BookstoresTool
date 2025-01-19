@@ -110,9 +110,9 @@ const ListProduct = (props: any) => {
 
             let response = await ProductFunction(jsonObject);
             if (response.Success) {
-                setTotalRecords(response.data.productCount);
-                setProductList(response.data.productModels);
-                console.log(response.data.productModels);
+                console.log(response.data);
+                setTotalRecords(response.data.count);
+                setProductList(response.data.listdata);
                 setLoading(false);
             } else {
                 setLoading(false);
@@ -463,18 +463,18 @@ const ListProduct = (props: any) => {
                 </thead>
                 <tbody>
                     {productList.map((product, index) => (
-                        <tr key={product.pid}>
+                        <tr key={product.id}>
                             <th scope="row">{index + 1}</th>
                             <td>{product.name}</td>
                             <td>
-                                {product.active ? (
+                                {product.isActive ? (
                                     <span role="img" aria-label="Active">&#128994;</span>
                                 ) : (
                                     <span role="img" aria-label="Inactive">&#128308;</span>
                                 )}
                             </td>
                             <td>
-                                {product.delete ? (
+                                {product.isDeleted ? (
                                     <span role="img" aria-label="Active">&#128994;</span>
                                 ) : (
                                     <span role="img" aria-label="Inactive">&#128308;</span>
@@ -487,31 +487,31 @@ const ListProduct = (props: any) => {
                                     </button>
                                     <ul className="dropdown-menu">
                                         <li>
-                                            <button type="button" className="btn btn-outline-warning m-2" onClick={() => Edit(product.pid)}>
+                                            <button type="button" className="btn btn-outline-warning m-2" onClick={() => Edit(product.id)}>
                                                 <span className="bi bi-pencil-square"></span> Edit
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" className="btn btn-outline-danger m-2" onClick={() => Delete(product.pid)}
-                                                style={{ display: product.delete ? 'none' : 'inline-block' }}>
+                                            <button type="button" className="btn btn-outline-danger m-2" onClick={() => Delete(product.id)}
+                                                style={{ display: product.isDeleted ? 'none' : 'inline-block' }}>
                                                 <span className="bi bi-trash"></span> Delete
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" className="btn btn-outline-dark m-2" onClick={() => Restore(product.pid)}
-                                                style={{ display: product.delete ? 'inline-block' : 'none' }}>
+                                            <button type="button" className="btn btn-outline-dark m-2" onClick={() => Restore(product.id)}
+                                                style={{ display: product.isDeleted ? 'inline-block' : 'none' }}>
                                                 <span className="bi bi-trash"></span> Restore
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" className="btn btn-outline-success m-2" onClick={() => Activetated(product.pid)}
-                                                style={{ display: product.delete ? 'none' : !product.active ? 'inline-block' : 'none'}}>
+                                            <button type="button" className="btn btn-outline-success m-2" onClick={() => Activetated(product.id)}
+                                                style={{ display: product.isDeleted ? 'none' : !product.isActive ? 'inline-block' : 'none'}}>
                                                 <span className="bi bi-trash"></span> Activate
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" className="btn btn-outline-secondary m-2" onClick={() => DeActivated(product.pid)}
-                                                style={{ display: product.delete ? 'none' : product.active ? 'inline-block' : 'none' }}>
+                                            <button type="button" className="btn btn-outline-secondary m-2" onClick={() => DeActivated(product.id)}
+                                                style={{ display: product.isDeleted ? 'none' : product.isActive ? 'inline-block' : 'none' }}>
                                                 <span className="bi bi-trash"></span> Deactivate
                                             </button>
                                         </li>

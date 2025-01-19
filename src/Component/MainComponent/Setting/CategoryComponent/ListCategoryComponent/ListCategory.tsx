@@ -10,12 +10,13 @@ import toast from "react-hot-toast";
 import Pagination from "../../../../Module/PaginationComponent/Pagination";
 import PageTitle from "../../../../../PageTitle/PageTitle";
 import { confirmAlert } from "react-confirm-alert";
+import Categorycontext from "../../../../../Context/Category/CategoryContext";
 
 const ListCategory = (props: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const context = useContext(Authcontex);
-  const Productcontext = useContext(Productcontex);
+  const CategoryContexts = useContext(Categorycontext);
   const { CheckuserFunction } = context;
   const {
     CategoryFunction,
@@ -23,7 +24,7 @@ const ListCategory = (props: any) => {
     ActivetedCategoryFuncation,
     RestoreCategoryFuncation,
     DeActivetedCategoryFuncation,
-  } = Productcontext;
+  } = CategoryContexts;
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState(""); // Column to sort by
   const [sortOrder, setSortOrder] = useState(0);
@@ -113,9 +114,9 @@ const ListCategory = (props: any) => {
       };
       let response = await CategoryFunction(jsonObject);
       if (response.Success) {
-        setTotalRecords(response.data.categoryCount);
-        setCategoryList(response.data.categoryTypeModels);
-        console.log(response.data.categoryTypeModels);
+        setTotalRecords(response.data.count);
+        setCategoryList(response.data.listdata);
+        console.log(response.data);
         props.setLoading(false);
       } else {
         props.setLoading(false);

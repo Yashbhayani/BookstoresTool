@@ -1,8 +1,8 @@
 export interface IProductModel {
-    pid: string;
+    id: string;
     name: string;
-    active: boolean;
-    delete:boolean;
+    isActive: boolean;
+    isDeleted:boolean;
 }
 
 
@@ -11,7 +11,6 @@ export interface IProductModel {
 export interface ICategoryModel {
     id: string;
     productName: string;
-    categoryCode: string;
     categoryValue: string;
     categoryPath: string;
     isActive: boolean;
@@ -20,14 +19,13 @@ export interface ICategoryModel {
 
 
 export interface ISubcategoryModel {
-    subCategoryId: string;
+    id: string;
     productName: string;
     categoryName: string;
-    subCategoryCode: string;
     subCategoryValue: string;
     subCategoryPath: string;
-    active: boolean;
-    delete:boolean;
+    isactive: boolean;
+    isdelete:boolean;
 }
 
 

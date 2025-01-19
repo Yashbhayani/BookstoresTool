@@ -8,22 +8,28 @@ import { store } from './Redux/store';
 import AuthState from './Context/Auth/AuthState';
 import HomeState from './Context/Home/HomeState';
 import ProductState from './Context/Product/ProductState';
+import CategoryState from './Context/Category/CategoryState';
+import SubCategoryState from './Context/SubCategory/SubCategoryState';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <AuthState>
-    <HomeState>
-      <ProductState>
-        {/* <React.StrictMode> */}
-        <Provider store={store}>
-          <App />
-        </Provider>
-        {/* </React.StrictMode> */}
-      </ProductState>
-    </HomeState>
-  </AuthState>
+  <Provider store={store}>
+
+    <AuthState>
+      <HomeState>
+        <ProductState>
+          <CategoryState>
+            <SubCategoryState>
+              <App />
+            </SubCategoryState>
+          </CategoryState>
+        </ProductState>
+      </HomeState>
+    </AuthState>
+  </Provider>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,38 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ISelectModel } from "../../../../../models/model";
-import PageTitle from "../../../../../PageTitle/PageTitle";
-import { useNavigate } from "react-router-dom";
-import Authcontex from "../../../../../Context/Auth/AuthContext";
 import Productcontex from "../../../../../Context/Product/ProductContext";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { DebounceInput } from "react-debounce-input";
+import PageTitle from "../../../../../PageTitle/PageTitle";
+import AuthContext from "../../../../../Context/Auth/AuthContext";
 import { ISubCategorySaveModel } from "../../../../../models/savemodel";
-import SubCategorycontext from "../../../../../Context/SubCategory/SubCategoryContext";
 import Categorycontext from "../../../../../Context/Category/CategoryContext";
+import SubCategorycontext from "../../../../../Context/SubCategory/SubCategoryContext";
 
-const AddSubCategory = (props: any) => {
+const EditSubCategory = (props: any) => {
   const navigate = useNavigate();
-  const [productId, setProductId] = useState<string | undefined>(undefined);
-  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({
-    code: "",
-    name: "",
-    cpath: "",
-    productId: "",
-    categoryId: "",
-  });
-  const [cpath, setCpath] = useState("");
-  const [name, setName] = useState("");
-  const [isChecked, setIsChecked] = useState(true);
-  const [code, setCode] = useState("");
-  const [ProductList, setProductList] = useState<ISelectModel[]>([]);
-  const [CategoryList, setCategoryList] = useState<ISelectModel[]>([]);
-  const context = useContext(Authcontex);
+  let { id } = useParams<string>();
+  const context = useContext(AuthContext);
   const ProductContex = useContext(Productcontex);
   const CategoryContex = useContext(Categorycontext);
   const SubCategoryContex = useContext(SubCategorycontext);
-  
-
   const { CheckuserFunction } = context;
   const {
     SelectProductListFunction
@@ -41,18 +25,32 @@ const AddSubCategory = (props: any) => {
     SelectCategoryListFunction
   } = CategoryContex;
   const {
-    SubCategoryCodeFunction,
-    SubCategoryPathFunction,
-    SaveSubCategoryFuncation,
+    GetSubCategoryFunction,
+    UpdateSubCategoryFuncation,
   } = SubCategoryContex;
+  const [errors, setErrors] = useState<{ [key: string]: string }>({
+    name: "",
+    productId: "",
+    categoryId: "",
+  });
+  const [ProductList, setProductList] = useState<ISelectModel[]>([]);
+  const [CategoryList, setCategoryList] = useState<ISelectModel[]>([]);
+  const [productId, setProductId] = useState<string | undefined>(undefined);
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+  const [isChecked, setIsChecked] = useState(true);
+  const [name, setName] = useState("");
+
+
+
   useEffect(() => {
-    document.title = PageTitle.AddSubCategory;
+    document.title = PageTitle.EditSubCategory;
     const token = sessionStorage.getItem("token");
     if (token) {
       CallCheckuser();
     } else {
       navigate("/login");
     }
+    console.log(decodeURIComponent(id as string));
   }, []);
 
   const CallCheckuser = async () => {
@@ -82,26 +80,6 @@ const AddSubCategory = (props: any) => {
     }
   };
 
-  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
-    const { value } = e.target;
-    setProductId(value || undefined); // Use undefined if no product is selected
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      productId: "",
-    }));
-    CategoryListFunction(value);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
-    const { value } = e.target;
-    setCategoryId(value || undefined); // Use undefined if no product is selected
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      productId: "",
-    }));
-  };
 
   const ProductListFunction = async () => {
     props.setLoading(true);
@@ -113,6 +91,7 @@ const AddSubCategory = (props: any) => {
           props.setLoading(false);
         } else {
           setProductList(response_ProductList.data);
+          GetSubCategoryData();
           props.setLoading(false);
         }
       } else {
@@ -129,6 +108,48 @@ const AddSubCategory = (props: any) => {
       });
       props.setLoading(false);
     }
+  };
+
+
+  const GetSubCategoryData = async () => {
+    props.setLoading(true);
+    try {
+      const response = await GetSubCategoryFunction(
+        decodeURIComponent(id as string)
+      );
+      console.log(response);
+      if (response.Success === true && response.data) {
+        setProductId(response.data.pID);
+        setCategoryId(response.data.cID);       
+        setName(response.data.name);
+        setIsChecked(response.data.isActive);
+        CategoryListFunction(response.data.pID);
+      } else {
+        navigate("/");
+      }
+    } catch {
+      toast.error("Server is not working", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+        duration: 2000,
+      });
+    } finally {
+      props.setLoading(false);
+    }
+  };
+
+  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    const { value } = e.target;
+    setProductId(value || undefined); // Use undefined if no product is selected
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      productId: "",
+    }));
+    CategoryListFunction(value);
   };
 
   const CategoryListFunction = async (pid: any) => {
@@ -159,85 +180,18 @@ const AddSubCategory = (props: any) => {
     }
   };
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
     const { value } = e.target;
-    setCode(value.toUpperCase().replace(/\s/g, ""));
-    props.setLoading(true);
-    CheckCode(value.toUpperCase().replace(/\s/g, ""));
+    setCategoryId(value || undefined); // Use undefined if no product is selected
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      productId: "",
+    }));
   };
 
-  const CheckCode = async (value: string) => {
-    try {
-      const response = await SubCategoryCodeFunction(value);
-      if (response.Success) {
-        if (!response.data) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            code: "Code is Alredy added",
-          }));
-          props.setLoading(false);
-        } else {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            code: "",
-          }));
-          props.setLoading(false);
-        }
-      } else {
-        props.setLoading(false);
-      }
-    } catch {
-      toast.error("Server is not working", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        duration: 2000,
-      });
-      props.setLoading(false);
-    }
-    // Implement code validation logic here
-  };
-
-  const CheckPath = async (value: string) => {
-    try {
-      const response = await SubCategoryPathFunction(value);
-      if (response.Success) {
-        if (!response.data) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            cpath: "Path is Alredy added",
-          }));
-          props.setLoading(false);
-        } else {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            cpath: "",
-          }));
-          props.setLoading(false);
-        }
-      } else {
-        props.setLoading(false);
-      }
-    } catch {
-      toast.error("Server is not working", {
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        duration: 2000,
-      });
-      props.setLoading(false);
-    }
-    // Implement code validation logic here
-  };
-  const handlePathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setCpath(value.toLowerCase().replace(/\s/g, "-"));
-    props.setLoading(true);
-    CheckPath(value.toLowerCase().replace(/\s/g, "-"));
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,35 +204,17 @@ const AddSubCategory = (props: any) => {
     }));
   };
 
-  const handleToggle = () => {
-    setIsChecked(!isChecked);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     props.setLoading(true);
     if (
-      !code.trim() ||
       !name.trim() ||
-      !cpath.trim() ||
       productId === undefined
     ) {
-      if (!code.trim()) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          code: "Code is required",
-        }));
-      }
       if (!name.trim()) {
         setErrors((prevErrors) => ({
           ...prevErrors,
           name: "Name is required",
-        }));
-      }
-      if (!cpath.trim()) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          cpath: "Path is required",
         }));
       }
 
@@ -299,30 +235,24 @@ const AddSubCategory = (props: any) => {
       return;
     }
 
-    let category: ISubCategorySaveModel = {
-      scID: "",
+    let subcategory: ISubCategorySaveModel = {
+      scID: decodeURIComponent(id as string),
       pID: Number(productId),
       cID: Number(categoryId),
-      code: code,
-      path: cpath,
       name: name,
       isActive: isChecked,
     };
 
-    const response = await SaveSubCategoryFuncation(category);
+    const response = await UpdateSubCategoryFuncation(subcategory);
     console.log(response);
     if (response.Success) {
       setProductId(undefined);
       setCategoryId(undefined);
-      setCode("");
-      setCpath("");
       setName("");
       setIsChecked(true);
       setErrors({
         productId: "",
         categoryId: "",
-        cpath: "",
-        code: "",
         name: "",
       });
       props.setLoading(false);
@@ -334,6 +264,7 @@ const AddSubCategory = (props: any) => {
         },
         duration: 2000,
       });
+      navigate("/subcategory");
     } else {
       props.setLoading(false);
       toast.error(response.Message, {
@@ -344,6 +275,7 @@ const AddSubCategory = (props: any) => {
         },
         duration: 2000,
       });
+      navigate("/subcategory");
     }
   };
   return (
@@ -359,6 +291,7 @@ const AddSubCategory = (props: any) => {
             <select
               className={`form-control ${errors.productId ? "is-invalid" : ""}`}
               id="inputProduct"
+              value={productId}
               onChange={handleProductChange}
             >
               <option value="">Select</option>
@@ -380,6 +313,7 @@ const AddSubCategory = (props: any) => {
             <select
               className={`form-control ${errors.productId ? "is-invalid" : ""}`}
               id="inputCategory"
+              value={categoryId}
               onChange={handleCategoryChange}
             >
               <option value="">Select</option>
@@ -391,43 +325,6 @@ const AddSubCategory = (props: any) => {
             </select>
             {errors.productId && (
               <div className="invalid-feedback">{errors.productId}</div>
-            )}
-          </div>
-        </div>
-        <div className="row g-3 mb-2">
-          <div className="col-md-6">
-            <label htmlFor="inputCode" className="form-label">
-              Code
-            </label>
-            <DebounceInput
-              type="text"
-              minLength={3}
-              debounceTimeout={300}
-              className={`form-control ${errors.code ? "is-invalid" : ""}`}
-              id="inputCode"
-              value={code}
-              onChange={handleCodeChange}
-            />
-            {errors.code && (
-              <div className="invalid-feedback">{errors.code}</div>
-            )}
-          </div>
-
-          <div className="col-md-6">
-            <label htmlFor="inputCpath" className="form-label">
-              Category Path
-            </label>
-            <DebounceInput
-              type="text"
-              minLength={3}
-              debounceTimeout={300}
-              className={`form-control ${errors.cpath ? "is-invalid" : ""}`}
-              id="inputCpath"
-              value={cpath}
-              onChange={handlePathChange}
-            />
-            {errors.cpath && (
-              <div className="invalid-feedback">{errors.cpath}</div>
             )}
           </div>
         </div>
@@ -471,4 +368,4 @@ const AddSubCategory = (props: any) => {
   );
 };
 
-export default AddSubCategory;
+export default EditSubCategory;

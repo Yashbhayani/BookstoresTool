@@ -8,19 +8,23 @@ import toast from "react-hot-toast";
 import { ISelectModel } from "../../../../../models/model";
 import { ICategorySaveModel } from "../../../../../models/savemodel";
 import PageTitle from "../../../../../PageTitle/PageTitle";
+import Categorycontext from "../../../../../Context/Category/CategoryContext";
 
 const AddCategory = (props: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const context = useContext(Authcontex);
-  const Productcontext = useContext(Productcontex);
+  const ProductContext = useContext(Productcontex);
+  const CategoryContext = useContext(Categorycontext);
   const { CheckuserFunction } = context;
   const {
-    SelectProductListFunction,
+    SelectProductListFunction
+  } = ProductContext;
+  const {
     CategoryCodeFunction,
     CategoryPathFunction,
     SaveCategoryFuncation,
-  } = Productcontext;
+  } = CategoryContext;
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     code: "",
     name: "",

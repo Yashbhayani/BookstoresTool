@@ -7,19 +7,23 @@ import toast from "react-hot-toast";
 import { ISelectModel } from "../../../../../models/model";
 import { DebounceInput } from "react-debounce-input";
 import { ICategorySaveModel } from "../../../../../models/savemodel";
+import Categorycontext from "../../../../../Context/Category/CategoryContext";
 
 const EditCategory = (props: any) => {
   let { id } = useParams<string>();
   const context = useContext(AuthContext);
   const ProductContext = useContext(Productcontex);
+  const CategoryContext = useContext(Categorycontext);
   const { CheckuserFunction } = context;
   const {
-    SelectProductListFunction,
+    SelectProductListFunction
+  } = ProductContext;
+  const {
     CategoryCodeFunction,
     CategoryPathFunction,
     GetCategoryFunction,
     UpdateCategoryFuncation
-  } = ProductContext;
+  } = CategoryContext;
   const navigate = useNavigate();
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     code: "",
