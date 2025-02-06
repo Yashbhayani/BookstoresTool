@@ -72,4 +72,28 @@ public class UserController {
         return  userrepository.checkPass(pass);
     }
 
+
+    @GetMapping("/admin/list")
+    public Map<String, Object> adminlist(
+            @RequestHeader("token") String token,
+            @RequestParam("report") String report
+    ){
+    return  userrepository.adminlist(token, report);
+    }
+
+    @GetMapping("/useradmin/list")
+    public Map<String, Object> useradminlist(
+            @RequestHeader("token") String token,
+            @RequestParam("report") String report
+    ){
+        return  userrepository.useradminlist(token, report);
+    }
+
+    @GetMapping("/user/list")
+    public Map<String, Object> userlist(
+            @RequestHeader("token") String token,
+            @RequestParam("report") String report
+    ){
+        return  userrepository.userlist(token, report);
+    }
 }

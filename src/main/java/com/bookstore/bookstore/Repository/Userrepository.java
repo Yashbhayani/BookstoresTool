@@ -12,4 +12,7 @@ public interface Userrepository {
     public Map<String, Object> Checkuser(String token);
     InputStream getResource(String fileName) throws FileNotFoundException;
     public Map<String, Object> checkPass(String checkPass);
+    public  Map<String, Object> adminlist(String token, String report);
+    public  Map<String, Object> useradminlist(String token, String report);
+    public  Map<String, Object> userlist(String token, String report);
 }

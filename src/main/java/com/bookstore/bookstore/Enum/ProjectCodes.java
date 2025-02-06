@@ -26,7 +26,10 @@ public class ProjectCodes {
     public enum ReportCods{
         ALLPRODUCTTYPES,
         ALLCATEGORYTYPES,
-        ALLSUBCATEGORYTYPES
+        ALLSUBCATEGORYTYPES,
+        ADMINLIST,
+        USERADMINLIST,
+        USERLIST
     }
     public enum SelectCodes{
         SELECTPRODUCT,

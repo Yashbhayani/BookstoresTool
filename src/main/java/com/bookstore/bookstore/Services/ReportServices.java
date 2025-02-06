@@ -173,7 +173,6 @@ public class ReportServices implements ReportRepository {
         return response;
     }
 
-
     @Override
     public boolean isUserAdmin(String username) {
         try {
@@ -194,6 +193,58 @@ public class ReportServices implements ReportRepository {
             // Handle any exceptions (e.g., database issues) gracefully
             return false;
         }
+    }
+
+    @Override
+    public Map<String, Object> fetchSelectDetails(String Code, int id ) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // Fetch the subcategory query
+            String CodeQ = jdbcTemplate.queryForObject(
+                    commonQueryServicesModel.SP,
+                    new Object[]{Code},
+                    String.class
+            );
+
+            List<Map<String, Object>> list = jdbcTemplate.execute(CodeQ,
+                    (CallableStatementCallback<List<Map<String, Object>>>) callableStatement -> {
+                        if (id != 0) {
+                            callableStatement.setInt(1, id);
+                        }
+                        List<Map<String, Object>> data = new ArrayList<>();
+                        boolean hasResults = callableStatement.execute();
+                        if (hasResults) {
+                                try (ResultSet rs = callableStatement.getResultSet()) {
+                                    while (rs != null && rs.next()) {
+                                        Map<String, Object> details = new HashMap<>();
+                                        for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                                                details.put(rs.getMetaData().getColumnLabel(i), rs.getObject(rs.getMetaData().getColumnLabel(i)));
+                                        }
+                                        data.add(details);
+                                    }
+                                }
+
+                        }
+                        return data;
+                    });
+
+            // Prepare the response with count and listdata
+            if (list != null && !list.isEmpty()) {
+                Map<String, Object> data = new HashMap<>();
+                data.put("listdata", list);
+                response.put("data", data);
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", "List not found for the specified report.");
+                response.put("Success", false);
+            }
+        } catch (Exception e) {
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+
+        return response;
     }
 
 

@@ -71,59 +71,36 @@ public class ProductServices implements ProductRepository {
         return response;
     }
 
-
     @Override
     public Map<String, Object> getselectproductlist(String token) {
         Map<String, Object> response = new HashMap<>();
         try {
-            if (authjwtrepository.isTokenValid(token)) {
-                String username = authjwtrepository.getUsernameFromToken(token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
-                String userRoleResult = (String) result.get("Result");
-                if (userRoleResult != null) {
-                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
 
-                    if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.SelectCodes.SELECTPRODUCT.name()}, String.class);
-                        // Execute stored procedure and fetch product list
-                        var I_Select_Product_Model = jdbcTemplate.execute(
-                                SpResult,
-                                (CallableStatementCallback<List<ISelectModel>>) callableStatement -> {
-                                    List<ISelectModel> resultList = new ArrayList<>();
-                                    boolean hasResults = callableStatement.execute();
+            if (!authjwtrepository.isTokenValid(token)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
 
-                                    if (hasResults) {
-                                        try (ResultSet rs = callableStatement.getResultSet()) {
-                                            while (rs != null && rs.next()) {
-                                                ISelectModel iSelectModel = new ISelectModel();
-                                                iSelectModel.setId(rs.getInt("id"));
-                                                iSelectModel.setName(rs.getString("Name"));
-                                                resultList.add(iSelectModel);
-                                            }
-                                        }
-                                    }
-                                    return resultList;
-                                });
-                        if (I_Select_Product_Model != null ) {
-                            response.put("data", I_Select_Product_Model);
-                            response.put("Success", true);
-                        }else {
-                            response.put("Message", "Product List not found for the specified language.");
-                            response.put("Success", false);
-                        }
-                    } else {
-                        response.put("Message", "User is not an admin.");
-                        response.put("Success", false);
-                    }
-                } else {
-                    response.put("Message", "User role not found.");
-                    response.put("Success", false);
-                }
+            // Get username from the token
+            String username = authjwtrepository.getUsernameFromToken(token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> productResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.SELECTPRODUCT.name(), 0);
+            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
+                response.put("data", productResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
             } else {
-                response.put("Message", "Invalid token.");
+                response.put("Message", productResponse.get("Message"));
                 response.put("Success", false);
             }
+
         } catch (Exception e) {
             response.put("Message", e.getMessage());
             response.put("Success", false);
@@ -522,82 +499,5 @@ public class ProductServices implements ProductRepository {
     }
 }
 
-
-    /*@Override
-    public Map<String, Object> getproduct(String Token, String report) {
-        Map<String, Object> response = new HashMap<>();
-        try{
-            if (authjwtrepository.isTokenValid(Token)) {
-                String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
-                String userRoleResult = (String) result.get("Result");
-                if (userRoleResult != null) {
-                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
-                    if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ReportCods.ALLPRODUCTTYPES.name()}, String.class);
-                        var productList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<ProductsModel>) callableStatement -> {
-                            ProductsModel productsModel = new ProductsModel();
-                            callableStatement.setString(1, report);
-                            boolean hasResults = callableStatement.execute();
-
-                            if (hasResults) {
-                                try (ResultSet rs = callableStatement.getResultSet()) {
-                                    if (rs != null && rs.next()) {
-                                        productsModel.setProductCount(rs.getInt("total_Products"));
-                                    }
-                                }
-
-                                // Second result set: product details
-                                if (callableStatement.getMoreResults()) {
-                                    try (ResultSet rs = callableStatement.getResultSet()) {
-                                        List<ProductModel> productModels = new ArrayList<>();
-                                        while (rs != null && rs.next()) {
-                                            ProductModel productModel = new ProductModel();
-                                            try {
-                                                productModel.setPid(authjwtrepository.IdEncrypt(rs.getInt("id")));
-                                            } catch (Exception e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                            productModel.setName(rs.getString("Name"));
-                                            productModel.setActive(rs.getBoolean("IsActive"));
-                                            productModel.setDelete(rs.getBoolean("IsDeleted"));
-                                            productModels.add(productModel);
-                                        }
-                                        productsModel.setProductModels(productModels);
-                                    }
-                                }
-                            }
-                            return productsModel;
-                        });
-                        if (productList != null ) {
-                            response.put("data", productList);
-                            response.put("Success", true);
-                            response.put("Code", 200);
-                        } else {
-                            response.put("Message", "Product List not found for the specified language.");
-                            response.put("Success", false);
-                        }
-                    }
-                    else {
-                        response.put("Message", "User is Not valid");
-                        response.put("Success", false);
-                    }
-                }else {
-                    response.put("Message", "User is Not valid");
-                    response.put("Success", false);
-                }
-            }
-            else {
-                response.put("Message", "User is Not valid");
-                response.put("Success", false);
-            }
-        }
-        catch (Exception e){
-            response.put("Message", e.getMessage());
-            response.put("Success", false);
-        }
-        return response;
-    }*/
 
 

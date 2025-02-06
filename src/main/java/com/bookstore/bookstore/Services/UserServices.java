@@ -5,6 +5,7 @@ import com.bookstore.bookstore.CustomModel.Model.LoginModel;
 import com.bookstore.bookstore.CustomModel.Model.User;
 import com.bookstore.bookstore.Enum.ProjectCodes;
 import com.bookstore.bookstore.Repository.AuthJwtRepository;
+import com.bookstore.bookstore.Repository.ReportRepository;
 import com.bookstore.bookstore.Repository.Userrepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class UserServices implements Userrepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private final AuthJwtRepository authjwtrepository;
+    private final ReportRepository reportRepository;
     private  AuthJwt authJwt;
     @Value("${project.image}")
     private String path;
@@ -34,8 +36,9 @@ public class UserServices implements Userrepository {
     private PasswordEncryptionService encryptionService;
     CommonQueryServicesModel commonQueryServicesModel = new CommonQueryServicesModel();
 
-    public UserServices(AuthJwtRepository authjwtrepository) {
+    public UserServices( AuthJwtRepository authjwtrepository,ReportRepository reportRepository) {
         this.authjwtrepository = authjwtrepository;
+        this.reportRepository = reportRepository;
     }
 
 
@@ -150,4 +153,112 @@ public class UserServices implements Userrepository {
         return response;
     }
 
+
+    @Override
+    public Map<String, Object> adminlist(String token, String report){
+        Map<String, Object> response = new HashMap<>();
+        try {
+            if (!authjwtrepository.isTokenValid(token)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            String username = authjwtrepository.getUsernameFromToken(token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ADMINLIST.name(),report);
+            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
+                response.put("data", productResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", productResponse.get("Message"));
+                response.put("Success", false);
+            }
+
+
+        }catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> useradminlist(String token, String report){
+        Map<String, Object> response = new HashMap<>();
+        try {
+            if (!authjwtrepository.isTokenValid(token)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            String username = authjwtrepository.getUsernameFromToken(token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.USERADMINLIST.name(),report);
+            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
+                response.put("data", productResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", productResponse.get("Message"));
+                response.put("Success", false);
+            }
+
+
+        }catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> userlist(String token, String report){
+        Map<String, Object> response = new HashMap<>();
+        try {
+            if (!authjwtrepository.isTokenValid(token)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            String username = authjwtrepository.getUsernameFromToken(token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.USERLIST.name(),report);
+            if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
+                response.put("data", productResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
+            } else {
+                response.put("Message", productResponse.get("Message"));
+                response.put("Success", false);
+            }
+
+
+        }catch (Exception e){
+            response.put("Message", e.getMessage());
+            response.put("Success", false);
+        }
+        return response;
+    }
 }

@@ -71,65 +71,44 @@ public class SubCategoryServices implements SubCategoryRepository {
         return response;
     }
 
+
     @Override
     public Map<String, Object> getselectSubCategorylist(String token, int scid) {
         Map<String, Object> response = new HashMap<>();
         try {
-            if (authjwtrepository.isTokenValid(token)) {
-                String username = authjwtrepository.getUsernameFromToken(token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
-                String userRoleResult = (String) result.get("Result");
-                if (userRoleResult != null) {
-                    boolean isAdmin = Boolean.parseBoolean(userRoleResult);
 
-                    if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.SelectCodes.SELECTSUBCATEGORY.name()}, String.class);
-                        // Execute stored procedure and fetch product list
-                        var I_Select_Product_Model = jdbcTemplate.execute(
-                                SpResult,
-                                (CallableStatementCallback<List<ISelectModel>>) callableStatement -> {
-                                    callableStatement.setInt(1, scid);
-                                    List<ISelectModel> resultList = new ArrayList<>();
-                                    boolean hasResults = callableStatement.execute();
+            if (!authjwtrepository.isTokenValid(token)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
 
-                                    if (hasResults) {
-                                        try (ResultSet rs = callableStatement.getResultSet()) {
-                                            while (rs != null && rs.next()) {
-                                                ISelectModel iSelectModel = new ISelectModel();
-                                                iSelectModel.setId(rs.getInt("Id"));
-                                                iSelectModel.setName(rs.getString("Value"));
-                                                resultList.add(iSelectModel);
-                                            }
-                                        }
-                                    }
-                                    return resultList;
-                                });
-                        if (I_Select_Product_Model != null ) {
-                            response.put("data", I_Select_Product_Model);
-                            response.put("Success", true);
-                        }else {
-                            response.put("Message", "Product List not found for the specified language.");
-                            response.put("Success", false);
-                        }
-                    } else {
-                        response.put("Message", "User is not an admin.");
-                        response.put("Success", false);
-                    }
-                } else {
-                    response.put("Message", "User role not found.");
-                    response.put("Success", false);
-                }
+            // Get username from the token
+            String username = authjwtrepository.getUsernameFromToken(token);
+
+            if (!this.reportRepository.isUserAdmin(username)) {
+                response.put("Message", "User is Not valid");
+                response.put("Success", false);
+                return response;
+            }
+
+            Map<String, Object> categoryResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.SELECTSUBCATEGORY.name(), scid);
+            if (categoryResponse.containsKey("Success") && (boolean) categoryResponse.get("Success")) {
+                response.put("data", categoryResponse.get("data"));
+                response.put("Success", true);
+                response.put("Code", 200);
             } else {
-                response.put("Message", "Invalid token.");
+                response.put("Message", categoryResponse.get("Message"));
                 response.put("Success", false);
             }
+
         } catch (Exception e) {
             response.put("Message", e.getMessage());
             response.put("Success", false);
         }
         return response;
     }
+
     @Override
     public Map<String, Object> getSubCategoryCode(String Token, String Code) {
         Map<String, Object> response = new HashMap<>();
