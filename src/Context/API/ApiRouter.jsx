@@ -40,11 +40,23 @@ export const updatesubcategoryurl = "subcategory/update";
 export const restoresubcategoryurl = "subcategory/restore";
 export const deactivesubcategoryurl = "subcategory/deactive";
 
+//admin
+export const adminurl = "admin/list";
+
+//useradmin
+export const useradminurl = "useradmin/list";
+
+//user
+export const userurl = "user/list";
 
 //selct list for all
 export const select_product_list = "product/select-product/list";
 export const select_category_list = "category/select-category/list";
 
+
+//image
+
+export const customerimage= "/userimage/";
 
 
 

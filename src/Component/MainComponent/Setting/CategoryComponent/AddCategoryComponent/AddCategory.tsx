@@ -275,7 +275,7 @@ const AddCategory = (props: any) => {
           navigate("/");
           props.setLoading(false);
         } else {
-          setProductList(response_ProductList.data);
+          setProductList(response_ProductList.data.listdata);
           props.setLoading(false);
         }
       } else {

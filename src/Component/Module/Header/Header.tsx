@@ -76,10 +76,11 @@ const Header = (props: any) => {
                 <i className='fs-4 bi-house'></i> <span className='ms-1 d-none d-sm-inline'>Home</span>
               </Link>
 
+{/* 
               <Link className={`nav-link collapsed mt-0 ${location.pathname === '/dashboard' ? 'active' : ''}`} to='/dashboard'>
                 <i className='fs-4 bi-speedometer'></i> <span className='ms-1 d-none d-sm-inline'>Dashboard</span>
               </Link>
-
+*/}
               <Link className={`nav-link collapsed mt-0
                 ${location.pathname === '/product' ||
                   location.pathname === '/category' ||
@@ -106,6 +107,15 @@ const Header = (props: any) => {
 
               <Link className={`nav-link collapsed mt-0 ${location.pathname === '/books' ? 'active' : ''}`} to='/books'>
                 <i className='fs-4 bi-book-half'></i> <span className='ms-1 d-none d-sm-inline'>Books</span>
+              </Link>
+
+             
+              <Link className={`nav-link collapsed mt-0 ${location.pathname === '/admin' ? 'active' : ''}`} to='/admin' hidden={!Checkuser}>
+                <i className="fs-4 bi-person-fill"></i> <span className='ms-1 d-none d-sm-inline'>Admin</span>
+              </Link>
+
+              <Link className={`nav-link collapsed mt-0 ${location.pathname === '/user-admin' ? 'active' : ''}`} to='/user-admin' hidden={!Checkuser}>
+                <i className="fs-4 bi-person-workspace"></i> <span className='ms-1 d-none d-sm-inline'>User Admin</span>
               </Link>
 
               <Link className={`nav-link collapsed mt-0 ${location.pathname === '/users' ? 'active' : ''}`} to='/users' hidden={!Checkuser}>

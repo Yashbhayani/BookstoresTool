@@ -1,0 +1,6 @@
+.rounded-circle {
+    width: 50px;    /* Adjust the size as needed */
+    height: 50px;   /* Adjust the size as needed */
+    border-radius: 50%; /* This makes it circular */
+    object-fit: cover;  /* Ensures image is nicely cropped to fit inside circle */
+  }

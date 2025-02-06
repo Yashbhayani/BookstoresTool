@@ -10,6 +10,7 @@ import HomeState from './Context/Home/HomeState';
 import ProductState from './Context/Product/ProductState';
 import CategoryState from './Context/Category/CategoryState';
 import SubCategoryState from './Context/SubCategory/SubCategoryState';
+import CustomerState from './Context/CustomerList/CustomerState';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,7 +23,9 @@ root.render(
         <ProductState>
           <CategoryState>
             <SubCategoryState>
-              <App />
+              <CustomerState>
+                <App />
+              </CustomerState>
             </SubCategoryState>
           </CategoryState>
         </ProductState>

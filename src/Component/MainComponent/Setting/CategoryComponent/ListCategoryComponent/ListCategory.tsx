@@ -66,6 +66,7 @@ const ListCategory = (props: any) => {
       if (response.Success === true) {
         if (!response.data) {
           props.setLoading(false);
+          navigate("/");
         } else {
           await CallCategory(
             currentPage,

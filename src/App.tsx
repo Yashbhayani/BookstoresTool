@@ -16,7 +16,6 @@ import "./App.css"; // Import your custom CSS file
 import Dashboard from "./Component/MainComponent/DashboardComponent/Dashboard";
 import Book from "./Component/MainComponent/BookComponent/Book";
 import Books from "./Component/MainComponent/BooksComponent/Books";
-import User from "./Component/MainComponent/UserComponent/User";
 import Users from "./Component/MainComponent/UsersComponent/Users";
 import ListProduct from "./Component/MainComponent/Setting/ProductComponent/ListProductComponent/ListProduct";
 import ListCategory from "./Component/MainComponent/Setting/CategoryComponent/ListCategoryComponent/ListCategory";
@@ -28,6 +27,8 @@ import EditProduct from "./Component/MainComponent/Setting/ProductComponent/Edit
 import EditCategory from "./Component/MainComponent/Setting/CategoryComponent/EditCategoryComponent/EditCategory";
 import AddSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/AddSubCategoryComponent/AddSubCategory";
 import EditSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/EditSubCategoryComponent/EditSubCategory";
+import UserAdmin from "./Component/MainComponent/UserAdminComponent/UserAdmin";
+import Admin from "./Component/MainComponent/AdminComponent/ListAdminComponent/Admin";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -65,11 +66,12 @@ function App() {
           <Route path="/subcategory" element={<Header setLoading={setLoading}><ListSubCategory setLoading={setLoading} /></Header>} />
           <Route path="/subcategory/save" element={<Header setLoading={setLoading}><AddSubCategory setLoading={setLoading} /></Header>} />
           <Route path="/subcategory/edit/:id" element={<Header setLoading={setLoading}><EditSubCategory setLoading={setLoading} /></Header>} />
-          <Route path="/dashboard" element={<Header setLoading={setLoading}><Dashboard /></Header>} />
+          {/* <Route path="/dashboard" element={<Header setLoading={setLoading}><Dashboard /></Header>} /> */}
           <Route path="/books" element={<Header setLoading={setLoading}><Books /></Header>} />
           <Route path="/book/:id" element={<Header setLoading={setLoading}><Book /></Header>} />
-          <Route path="/users" element={<Header setLoading={setLoading}><Users /></Header>} />
-          <Route path="/user/:id" element={<Header setLoading={setLoading}><User /></Header>} />
+          <Route path="/users" element={<Header setLoading={setLoading}><Users setLoading={setLoading} /></Header>} />
+          <Route path="/user-admin" element={<Header setLoading={setLoading}><UserAdmin setLoading={setLoading} /></Header>} />
+          <Route path="/admin" element={<Header setLoading={setLoading}><Admin setLoading={setLoading} /></Header>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

@@ -1,17 +1,19 @@
+import Admin from "../Component/MainComponent/AdminComponent/ListAdminComponent/Admin";
 
 const PageTitle = {
     HomePage: "BookStore",
     Dashboard: "Dashboard",
-    ListProduct: "Product List",
+    ListProduct: "Product",
     AddProduct: "Add Product",
     EditProduct: "Edit Product",
-    ListCategory : "Category List",
+    ListCategory : "Category",
     AddCategory: "Add Category",
     EditCategory: "Edit Category",
-    ListSubCategory : "List SubCategory",
+    ListSubCategory : "SubCategory",
     AddSubCategory: "Add SubCategory",
     EditSubCategory: "Edit SubCategory",
-
+    Admin: "Admin",
+    UserAdmin: "UserAdmin",
 };
 
 export default PageTitle;

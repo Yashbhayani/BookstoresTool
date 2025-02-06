@@ -33,3 +33,13 @@ export interface ISelectModel{
     id: number;
     name: string;
 }
+
+export interface ICustomerModel {
+    id: string;
+    email : string;
+    firstName: string;
+    lastName: string;
+    image: string;
+    isActive: boolean;
+    isDeleted: boolean;
+}

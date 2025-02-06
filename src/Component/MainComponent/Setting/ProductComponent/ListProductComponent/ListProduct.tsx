@@ -33,8 +33,6 @@ const ListProduct = (props: any) => {
 
     const action = bindActionCreators(actionCreators, dispatch);
     const [productList, setProductList] = useState<IProductModel[]>(initialProductList);
-    const [loading, setLoading] = useState(true);
-
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRecords, setTotalRecords] = useState(10);
@@ -70,17 +68,18 @@ const ListProduct = (props: any) => {
 
 
     const CallCheckuser = async () => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             const response = await CheckuserFunction();
             if (response.Success === true) {
                 if (!response.data) {
-                    setLoading(false);
+                    props.setLoading(false);
+                    navigate("/");
                 } else {
                     await CallProduct(currentPage, itemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
                 }
             } else {
-                setLoading(false);
+                props.setLoading(false);
             }
         } catch {
             toast.error("Server is not working", {
@@ -91,12 +90,12 @@ const ListProduct = (props: any) => {
                 },
                 duration: 2000,
             });
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
     const CallProduct = async (cP: any, iP: any, sB: string, sO: number, Active: string, Deleted: string) => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             let jsonObject = {
                 reversestatus: sO, // order by
@@ -113,9 +112,9 @@ const ListProduct = (props: any) => {
                 console.log(response.data);
                 setTotalRecords(response.data.count);
                 setProductList(response.data.listdata);
-                setLoading(false);
+                props.setLoading(false);
             } else {
-                setLoading(false);
+                props.setLoading(false);
             }
         } catch {
             toast.error("Server is not working", {
@@ -126,7 +125,7 @@ const ListProduct = (props: any) => {
                 },
                 duration: 2000,
             });
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
@@ -164,7 +163,7 @@ const ListProduct = (props: any) => {
     const handleClose = () => setModalShow(false);
 
     const handleDelete = async (pid: string) => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             let response = await DeleteProductFuncation(pid);
             setId('');
@@ -198,13 +197,13 @@ const ListProduct = (props: any) => {
                 duration: 2000,
             });
         } finally {
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
 
     const handleRestore = async (pid: string) => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             let response = await RestoreProductFuncation(pid);
             setId('');
@@ -238,12 +237,12 @@ const ListProduct = (props: any) => {
                 duration: 2000,
             });
         } finally {
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
     const handleActive = async (pid: string) => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             let response = await ActiveteProductFuncation(pid);
             setId('');
@@ -277,12 +276,12 @@ const ListProduct = (props: any) => {
                 duration: 2000,
             });
         } finally {
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
     const handleDeActive = async (pid: string) => {
-        setLoading(true);
+        props.setLoading(true);
         try {
             let response = await DeActiveProductFuncation(pid);
             setId('');
@@ -316,12 +315,12 @@ const ListProduct = (props: any) => {
                 duration: 2000,
             });
         } finally {
-            setLoading(false);
+            props.setLoading(false);
         }
     };
 
     const Restore = (pid: string) => {
-        confirmAlert({
+        props.confirmAlert({
             title: 'Confirm to Restore!',
             message: 'Are you sure to do this?',
             buttons: [
