@@ -14,9 +14,9 @@ import { actionCreators } from "./Redux";
 import { BallTriangle } from "react-loader-spinner"; // Import the spinner component
 import "./App.css"; // Import your custom CSS file
 import Dashboard from "./Component/MainComponent/DashboardComponent/Dashboard";
-import Book from "./Component/MainComponent/BookComponent/Book";
-import Books from "./Component/MainComponent/BooksComponent/Books";
-import Users from "./Component/MainComponent/UsersComponent/Users";
+import Book from "./Component/MainComponent/Books/BookComponent/Book";
+import Books from "./Component/MainComponent/Books/BooksComponent/Books";
+import Users from "./Component/MainComponent/Users/UsersComponent/Users";
 import ListProduct from "./Component/MainComponent/Setting/ProductComponent/ListProductComponent/ListProduct";
 import ListCategory from "./Component/MainComponent/Setting/CategoryComponent/ListCategoryComponent/ListCategory";
 import ListSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/ListSubCategoryComponent/ListSubCategory";
@@ -27,8 +27,10 @@ import EditProduct from "./Component/MainComponent/Setting/ProductComponent/Edit
 import EditCategory from "./Component/MainComponent/Setting/CategoryComponent/EditCategoryComponent/EditCategory";
 import AddSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/AddSubCategoryComponent/AddSubCategory";
 import EditSubCategory from "./Component/MainComponent/Setting/SubCategoryComponent/EditSubCategoryComponent/EditSubCategory";
-import UserAdmin from "./Component/MainComponent/UserAdminComponent/UserAdmin";
+import UserAdmin from "./Component/MainComponent/Users/UserAdminComponent/UserAdmin";
 import Admin from "./Component/MainComponent/AdminComponent/ListAdminComponent/Admin";
+import ApplyUserAdminList from "./Component/MainComponent/Users/ApplyUserAdminComponent/ApplyUserAdminList";
+import ViewApplyUserAdminInfo from "./Component/MainComponent/Users/ViewApplyUserAdminInfoComponent/ViewApplyUserAdminInfo";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -71,6 +73,8 @@ function App() {
           <Route path="/book/:id" element={<Header setLoading={setLoading}><Book /></Header>} />
           <Route path="/users" element={<Header setLoading={setLoading}><Users setLoading={setLoading} /></Header>} />
           <Route path="/user-admin" element={<Header setLoading={setLoading}><UserAdmin setLoading={setLoading} /></Header>} />
+          <Route path="/apply-user-admin" element={<Header setLoading={setLoading}><ApplyUserAdminList setLoading={setLoading} /></Header>} />
+          <Route path="/apply-user-info-list/:id" element={<Header setLoading={setLoading}><ViewApplyUserAdminInfo setLoading={setLoading} /></Header>} />
           <Route path="/admin" element={<Header setLoading={setLoading}><Admin setLoading={setLoading} /></Header>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

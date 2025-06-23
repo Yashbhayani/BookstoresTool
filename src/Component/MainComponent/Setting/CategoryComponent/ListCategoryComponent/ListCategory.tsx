@@ -117,9 +117,10 @@ const ListCategory = (props: any) => {
       if (response.Success) {
         setTotalRecords(response.data.count);
         setCategoryList(response.data.listdata);
-        console.log(response.data);
         props.setLoading(false);
       } else {
+        setTotalRecords(0);
+        setCategoryList([]);
         props.setLoading(false);
       }
     } catch {

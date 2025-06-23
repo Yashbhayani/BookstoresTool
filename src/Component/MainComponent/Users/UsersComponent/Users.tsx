@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PageTitle from "../../../../PageTitle/PageTitle";
 import Authcontex from "../../../../Context/Auth/AuthContext";
-import toast from "react-hot-toast";
 import Customercontex from "../../../../Context/CustomerList/CustomerContext";
+import { useNavigate } from "react-router-dom";
 import { ICustomerModel } from "../../../../models/model";
+import PageTitle from "../../../../PageTitle/PageTitle";
+import toast from "react-hot-toast";
 import * as apiroute from "../../../../Context/API/ApiRouter";
-import "./admin.css";
 import Pagination from "../../../Module/PaginationComponent/Pagination";
 
-const initialCustomerList: ICustomerModel[] = [];
-const Admin = (props: any) => {
+const Users = (props: any) => {
   const navigate = useNavigate();
 
   const context = useContext(Authcontex);
   const Customercontext = useContext(Customercontex);
   const { CheckuserFunction } = context;
-  const { AdminList } = Customercontext;
+  const { UserList } = Customercontext;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState(""); // Column to sort by
@@ -31,7 +29,7 @@ const Admin = (props: any) => {
   const [customerList, setCustomerList] = useState<ICustomerModel[]>([]);
 
   useEffect(() => {
-    document.title = PageTitle.Admin;
+    document.title = PageTitle.UserAdmin;
     const token = sessionStorage.getItem("token");
     if (token !== null && token !== undefined && token !== "") {
       CallCheckuser();
@@ -49,7 +47,7 @@ const Admin = (props: any) => {
           props.setLoading(false);
           navigate("/");
         } else {
-          await CallAdmin(
+          await CallUser(
             currentPage,
             itemsPerPage,
             sortBy,
@@ -74,7 +72,7 @@ const Admin = (props: any) => {
     }
   };
 
-  const CallAdmin = async (
+  const CallUser = async (
     cP: any,
     iP: any,
     sB: string,
@@ -94,16 +92,16 @@ const Admin = (props: any) => {
         offset_val: Number(iP), // limit
       };
 
-      let response = await AdminList(jsonObject);
+      let response = await UserList(jsonObject);
       if (response.Success) {
         //console.log(response.data);
         setTotalRecords(response.data.count);
         setCustomerList(response.data.listdata);
         props.setLoading(false);
       } else {
-        props.setLoading(false);
-        setTotalRecords(0);
+        setTotalRecords(response.data.count);
         setCustomerList([]);
+        props.setLoading(false);
       }
     } catch {
       toast.error("Server is not working", {
@@ -130,7 +128,7 @@ const Admin = (props: any) => {
       setSortBy(columnName);
       toggleSortOrder();
     }
-    await CallAdmin(
+    await CallUser(
       currentPage,
       itemsPerPage,
       columnName,
@@ -143,7 +141,7 @@ const Admin = (props: any) => {
   const onPageChange = (page: any) => {
     const newCurrentPage = Number(page);
     setCurrentPage(newCurrentPage);
-    CallAdmin(
+    CallUser(
       newCurrentPage,
       itemsPerPage,
       sortBy,
@@ -156,15 +154,7 @@ const Admin = (props: any) => {
   const onchangeItemsPerPage = (iPerPage: any) => {
     const newItemsPerPage = Number(iPerPage);
     setItemsPerPage(newItemsPerPage);
-    CallAdmin(1, newItemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
-  };
-
-  const searchData = () => {
-    CallAdmin(1, itemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
-  };
-
-  const addAdmin = () => {
-    navigate("/customer/save");
+    CallUser(1, newItemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
   };
 
   const handleDeleteStatusChange = (event: any) => {
@@ -183,19 +173,18 @@ const Admin = (props: any) => {
     setSearchTerm(event.target.value);
   };
 
+  const searchData = () => {
+    CallUser(1, itemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
+  };
+
   return (
     <div>
-      <h4>Admin</h4>
+      <h4>Users</h4>
       <hr />
+
+      
       <div className="navbar navbar-light">
         <div className="container-fluid">
-          <button
-            className="btn btn-outline-primary"
-            type="button"
-            onClick={addAdmin}
-          >
-            Add
-          </button>
           <div className="d-flex align-items-center ms-3">
             <div className="d-flex align-items-center me-3">
               {/* First Dropdown with Label */}
@@ -310,44 +299,7 @@ const Admin = (props: any) => {
                   </span>
                 )}
               </td>
-              <td>
-                <div className="btn-group">
-                  <button type="button" className="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Action
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li>
-                      <button type="button" className="btn btn-outline-warning m-2">
-                        <span className="bi bi-pencil-square"></span> Edit
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-outline-danger m-2"
-                        style={{ display: customer.isDeleted ? 'none' : 'inline-block' }}>
-                        <span className="bi bi-trash"></span> Delete
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-outline-dark m-2"
-                        style={{ display: customer.isDeleted ? 'inline-block' : 'none' }}>
-                        <span className="bi bi-trash"></span> Restore
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-outline-success m-2"
-                        style={{ display: customer.isDeleted ? 'none' : !customer.isActive ? 'inline-block' : 'none' }}>
-                        <span className="bi bi-trash"></span> Activate
-                      </button>
-                    </li>
-                    <li>
-                      <button type="button" className="btn btn-outline-secondary m-2"
-                        style={{ display: customer.isDeleted ? 'none' : customer.isActive ? 'inline-block' : 'none' }}>
-                        <span className="bi bi-trash"></span> Deactivate
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </td>
+              <td></td>
             </tr>
           ))}
         </tbody>
@@ -363,4 +315,4 @@ const Admin = (props: any) => {
   );
 };
 
-export default Admin;
+export default Users;

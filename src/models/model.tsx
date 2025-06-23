@@ -43,3 +43,18 @@ export interface ICustomerModel {
     isActive: boolean;
     isDeleted: boolean;
 }
+
+export interface ApplyUserAdminListModel {
+  gidtype: string;
+  userId: string;
+  email: string;
+  firstName: string;
+  idProof: string | null;
+  image: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  lastName: string;
+}
+
+
+

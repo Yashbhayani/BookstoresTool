@@ -114,6 +114,8 @@ const ListProduct = (props: any) => {
                 setProductList(response.data.listdata);
                 props.setLoading(false);
             } else {
+                setTotalRecords(0);
+                setProductList([]);
                 props.setLoading(false);
             }
         } catch {

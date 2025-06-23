@@ -106,9 +106,10 @@ const ListSubCategory = (props: any) => {
       if (response.Success) {
         setTotalRecords(response.data.count);
         setSubCategoryList(response.data.listdata);
-        console.log(response);
         props.setLoading(false);
       } else {
+        setTotalRecords(0);
+        setSubCategoryList([]);
         props.setLoading(false);
       }
     } catch {

@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PageTitle from "../../../../PageTitle/PageTitle";
-import Authcontex from "../../../../Context/Auth/AuthContext";
-import toast from "react-hot-toast";
-import Customercontex from "../../../../Context/CustomerList/CustomerContext";
-import { ICustomerModel } from "../../../../models/model";
-import * as apiroute from "../../../../Context/API/ApiRouter";
-import "./admin.css";
 import Pagination from "../../../Module/PaginationComponent/Pagination";
+import Authcontex from "../../../../Context/Auth/AuthContext";
+import Customercontex from "../../../../Context/CustomerList/CustomerContext";
+import { useNavigate } from "react-router-dom";
+import { ICustomerModel } from "../../../../models/model";
+import PageTitle from "../../../../PageTitle/PageTitle";
+import toast from "react-hot-toast";
+import * as apiroute from "../../../../Context/API/ApiRouter";
 
-const initialCustomerList: ICustomerModel[] = [];
-const Admin = (props: any) => {
+const UserAdmin = (props: any) => {
   const navigate = useNavigate();
 
   const context = useContext(Authcontex);
   const Customercontext = useContext(Customercontex);
   const { CheckuserFunction } = context;
-  const { AdminList } = Customercontext;
+  const { UserAdminList } = Customercontext;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState(""); // Column to sort by
@@ -28,10 +26,11 @@ const Admin = (props: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(10);
 
+  const [totaluseradminapply, setTotalUserAdminRecords] = useState(0);
   const [customerList, setCustomerList] = useState<ICustomerModel[]>([]);
 
   useEffect(() => {
-    document.title = PageTitle.Admin;
+    document.title = PageTitle.UserAdmin;
     const token = sessionStorage.getItem("token");
     if (token !== null && token !== undefined && token !== "") {
       CallCheckuser();
@@ -49,7 +48,7 @@ const Admin = (props: any) => {
           props.setLoading(false);
           navigate("/");
         } else {
-          await CallAdmin(
+          await CallUserAdmin(
             currentPage,
             itemsPerPage,
             sortBy,
@@ -74,7 +73,7 @@ const Admin = (props: any) => {
     }
   };
 
-  const CallAdmin = async (
+  const CallUserAdmin = async (
     cP: any,
     iP: any,
     sB: string,
@@ -94,16 +93,15 @@ const Admin = (props: any) => {
         offset_val: Number(iP), // limit
       };
 
-      let response = await AdminList(jsonObject);
+      let response = await UserAdminList(jsonObject);
       if (response.Success) {
         //console.log(response.data);
         setTotalRecords(response.data.count);
         setCustomerList(response.data.listdata);
+        setTotalUserAdminRecords(response.data.useradmincount);
         props.setLoading(false);
       } else {
         props.setLoading(false);
-        setTotalRecords(0);
-        setCustomerList([]);
       }
     } catch {
       toast.error("Server is not working", {
@@ -130,7 +128,7 @@ const Admin = (props: any) => {
       setSortBy(columnName);
       toggleSortOrder();
     }
-    await CallAdmin(
+    await CallUserAdmin(
       currentPage,
       itemsPerPage,
       columnName,
@@ -143,7 +141,7 @@ const Admin = (props: any) => {
   const onPageChange = (page: any) => {
     const newCurrentPage = Number(page);
     setCurrentPage(newCurrentPage);
-    CallAdmin(
+    CallUserAdmin(
       newCurrentPage,
       itemsPerPage,
       sortBy,
@@ -156,15 +154,7 @@ const Admin = (props: any) => {
   const onchangeItemsPerPage = (iPerPage: any) => {
     const newItemsPerPage = Number(iPerPage);
     setItemsPerPage(newItemsPerPage);
-    CallAdmin(1, newItemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
-  };
-
-  const searchData = () => {
-    CallAdmin(1, itemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
-  };
-
-  const addAdmin = () => {
-    navigate("/customer/save");
+    CallUserAdmin(1, newItemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
   };
 
   const handleDeleteStatusChange = (event: any) => {
@@ -183,19 +173,27 @@ const Admin = (props: any) => {
     setSearchTerm(event.target.value);
   };
 
+  const searchData = () => {
+    CallUserAdmin(1, itemsPerPage, sortBy, sortOrder, IsActive, IsDeleted);
+  };
+
+  const ApplyUserAdminList = () => {
+    navigate("/apply-user-admin");
+  };
+
   return (
     <div>
-      <h4>Admin</h4>
+      <h4> UserAdmin </h4>
       <hr />
+
       <div className="navbar navbar-light">
         <div className="container-fluid">
-          <button
-            className="btn btn-outline-primary"
-            type="button"
-            onClick={addAdmin}
-          >
-            Add
-          </button>
+        <button className="btn btn-outline-primary position-relative" type="button" style={{width:210}} onClick={ApplyUserAdminList}>
+            Check UserAdmin List
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{totaluseradminapply> 0 ? totaluseradminapply : 0}
+              <span className="visually-hidden">unread messages</span>
+            </span>
+        </button>
           <div className="d-flex align-items-center ms-3">
             <div className="d-flex align-items-center me-3">
               {/* First Dropdown with Label */}
@@ -311,7 +309,7 @@ const Admin = (props: any) => {
                 )}
               </td>
               <td>
-                <div className="btn-group">
+                 <div className="btn-group">
                   <button type="button" className="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Action
                   </button>
@@ -363,4 +361,4 @@ const Admin = (props: any) => {
   );
 };
 
-export default Admin;
+export default UserAdmin;
