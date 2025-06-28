@@ -5,33 +5,51 @@
 
 @media (max-width: 768px) {
   .logo {
-    max-width: 100vw; /* Set the maximum width for larger screens */
-    height: 50px; /* Allow the height to adjust proportionally */
+    max-width: 100vw;
+    /* Set the maximum width for larger screens */
+    height: 50px;
+    /* Allow the height to adjust proportionally */
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
 
 /* Basic styles */
 .nav {
-  width: 200px; /* Adjust as needed */
+  width: 180px;
+  /* Adjust as needed */
 }
 
 /* Submenu styles */
 .submenu.collapse:not(.show) {
-  background-color: #f8f9fa; /* Default background color when collapsed */
+  background-color: #f8f9fa;
+  /* Default background color when collapsed */
 }
 
 .submenu.collapse.show {
-  color: #fff; /* Adjust text color for better readability */
-  padding: 10px; /* Optional: Add some padding for better appearance */
+  color: #fff;
+  /* Adjust text color for better readability */
+  padding: 10px;
+  /* Optional: Add some padding for better appearance */
 }
 
 /* Active link styles */
 .nav-link.active {
-  color: #0056b3; /* Adjust text color for better readability */
-  border-radius: 5px; /* Optional: Add some rounding to corners */
+  color: #0056b3;
+  /* Adjust text color for better readability */
+  border-radius: 5px;
+  /* Optional: Add some rounding to corners */
 }
 
-.content {
-  flex: 1; /* Take up remaining space */
-  padding: 20px;
+
+nav.navbar {
+  /* margin: 0 !important;
+  padding: 0 !important; */
+  border: none !important;
 }
+
+/* 
+.content {
+  flex: 1;
+  padding: 20px;
+} */

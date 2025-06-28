@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import { actionCreators } from '../../../Redux';
 import AuthContext from '../../../Context/Auth/AuthContext';
 import toast from 'react-hot-toast';
+import Navbar from '../Navbar/Navbar';
 
 const Header = (props: any) => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Header = (props: any) => {
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token !== null && token !== undefined && token !== "") {
-        CallCheckuser();
+      CallCheckuser();
     } else {
       props.setLoading(false);
       navigate('/login');
@@ -67,8 +68,9 @@ const Header = (props: any) => {
     <div className="container-fluid">
       <div className="row">
         {/* Sidebar */}
-        <aside className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark position-fixed overflow-y-auto">
-        <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <aside className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark position-fixed overflow-y-auto height-px-300 ">
+          <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+
             <nav className='nav flex-column'>
               <img src={bookstoreLogo} alt='Bookstore Logo' className='logo img-fluid mb-3' />
 
@@ -76,7 +78,7 @@ const Header = (props: any) => {
                 <i className='fs-4 bi-house'></i> <span className='ms-1 d-none d-sm-inline'>Home</span>
               </Link>
 
-{/* 
+              {/* 
               <Link className={`nav-link collapsed mt-0 ${location.pathname === '/dashboard' ? 'active' : ''}`} to='/dashboard'>
                 <i className='fs-4 bi-speedometer'></i> <span className='ms-1 d-none d-sm-inline'>Dashboard</span>
               </Link>
@@ -109,7 +111,7 @@ const Header = (props: any) => {
                 <i className='fs-4 bi-book-half'></i> <span className='ms-1 d-none d-sm-inline'>Books</span>
               </Link>
 
-             
+
               <Link className={`nav-link collapsed mt-0 ${location.pathname === '/admin' ? 'active' : ''}`} to='/admin' hidden={!Checkuser}>
                 <i className="fs-4 bi-person-fill"></i> <span className='ms-1 d-none d-sm-inline'>Admin</span>
               </Link>
@@ -129,12 +131,13 @@ const Header = (props: any) => {
             </nav>
           </div>
         </aside>
-
-        {/* Main content col offset-md-3 offset-xl-2 py-3 */ }
         <div className="content">
-        <main className="col offset-md-3 offset-xl-2 py-3">
-          {props.children}
-        </main>
+          <main className="col offset-md-3 offset-xl-2">
+            <Navbar />
+            <div className="container-fluid">
+              {props.children}
+            </div>
+          </main>
         </div>
       </div>
     </div>
