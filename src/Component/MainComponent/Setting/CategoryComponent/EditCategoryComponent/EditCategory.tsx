@@ -85,6 +85,7 @@ const EditCategory = (props: any) => {
           navigate("/");
           props.setLoading(false);
         } else {
+          console.log(response_ProductList.data.listdata);
           setProductList(response_ProductList.data.listdata);
           GetCategoryData();
           props.setLoading(false);

@@ -14,6 +14,7 @@ const PageTitle = {
     EditSubCategory: "Edit SubCategory",
     Admin: "Admin",
     UserAdmin: "UserAdmin",
+    ListOfApplyUserAdmin: "Apply User Admin List",
 };
 
 export default PageTitle;

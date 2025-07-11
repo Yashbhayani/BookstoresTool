@@ -34,6 +34,13 @@ export interface ISelectModel{
     name: string;
 }
 
+export interface ISelectCategoryModel{
+    isActive: number;
+    name: string;
+    pID: number;
+    sID: number;
+}
+
 export interface ICustomerModel {
     id: string;
     email : string;
@@ -57,4 +64,10 @@ export interface ApplyUserAdminListModel {
 }
 
 
+export interface IuserInfoModel {
+    createdDate: Date;
+    isActive: boolean;
+    isUserValid: number;
+    uiid: string;
+}
 

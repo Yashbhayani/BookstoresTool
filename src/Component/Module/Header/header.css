@@ -53,3 +53,31 @@ nav.navbar {
   flex: 1;
   padding: 20px;
 } */
+
+
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  background: #212529;
+  color: #fff;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding: 20px 0;
+}
+
+.main-content {
+  margin-left: 200px;
+  width: calc(100% - 200px);
+}
+
+.nav-link.active {
+  color: #0056b3;
+  border-radius: 5px;
+}

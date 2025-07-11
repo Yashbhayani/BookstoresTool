@@ -133,7 +133,7 @@ const Header = (props: any) => {
         </aside>
         <div className="content">
           <main className="col offset-md-3 offset-xl-2">
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="container-fluid">
               {props.children}
             </div>

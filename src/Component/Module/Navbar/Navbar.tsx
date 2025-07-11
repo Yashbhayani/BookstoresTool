@@ -17,7 +17,7 @@ const Navbar = () => {
                 <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
+                {/* <ul className="navbar-nav">
                     <li className="nav-item active">
                         <a className="nav-link" href="#">
                             Home <span className="visually-hidden">(current)</span>
@@ -34,7 +34,7 @@ const Navbar = () => {
                             Disabled
                         </a>
                     </li>
-                </ul>
+                </ul> */}
             </div>
             </div>
         </nav>

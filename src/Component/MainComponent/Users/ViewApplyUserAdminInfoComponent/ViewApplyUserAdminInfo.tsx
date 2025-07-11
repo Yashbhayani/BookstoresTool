@@ -12,7 +12,6 @@ import "./viewapplyuseradmininfo.css";
 const ViewApplyUserAdminInfo = (props: any) => {
     const navigate = useNavigate();
     let { id } = useParams<string>();
-    console.log("ViewApplyUserAdminInfo props", props);
 
     const Back = () => {
         navigate('/apply-user-admin');
@@ -39,7 +38,7 @@ const ViewApplyUserAdminInfo = (props: any) => {
                         overflowY: "scroll",
                         
                     }}>
-                        <ListOfApplyUserAdmin></ListOfApplyUserAdmin>
+                        <ListOfApplyUserAdmin setLoading={props}></ListOfApplyUserAdmin>
                     </div>
                 </div>
             </div>
