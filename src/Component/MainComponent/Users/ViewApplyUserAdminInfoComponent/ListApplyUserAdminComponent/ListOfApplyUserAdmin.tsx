@@ -1,18 +1,26 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Authcontex from '../../../../../Context/Auth/AuthContext';
 import Customercontex from '../../../../../Context/CustomerList/CustomerContext';
 import PageTitle from '../../../../../PageTitle/PageTitle';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from "react-hot-toast";
+import { IuserInfoModel } from '../../../../../models/model';
 
-const ListOfApplyUserAdmin = (props: any) => {
+type Props = {
+  setLoading: (val: boolean) => void;
+  onButtonClick: (uid: string) => void;
+  selectedUiid: string | null;
+};
+
+const ListOfApplyUserAdmin = ({ setLoading, onButtonClick, selectedUiid }: Props) => {
   let { id } = useParams<string>();
   const navigate = useNavigate();
 
   const context = useContext(Authcontex);
   const Customercontext = useContext(Customercontex);
-   const { CheckuserFunction } = context;
+  const { CheckuserFunction } = context;
   const { ApplyUserAdminInfoList } = Customercontext;
+  const [userInfoList, setUserInfoList] = useState<IuserInfoModel[]>([]);
 
   useEffect(() => {
     document.title = PageTitle.ListOfApplyUserAdmin;
@@ -23,20 +31,20 @@ const ListOfApplyUserAdmin = (props: any) => {
       navigate("/login");
     }
   }, []);
-  
-    const CallCheckuser = async () => {
-    //props.setLoading(true);
+
+  const CallCheckuser = async () => {
+    setLoading(true);
     try {
       const response = await CheckuserFunction();
       if (response.Success === true) {
         if (!response.data) {
-         // props.setLoading(false);
+          setLoading(false);
           navigate("/");
         } else {
           CallApplyUserAdminInfoList(decodeURIComponent(id as string));
         }
       } else {
-       // props.setLoading(false);
+        setLoading(false);
       }
     } catch {
       toast.error("Server is not working", {
@@ -47,37 +55,61 @@ const ListOfApplyUserAdmin = (props: any) => {
         },
         duration: 2000,
       });
-     // props.setLoading(false);
+      setLoading(false);
     }
   };
 
 
-  const CallApplyUserAdminInfoList = async (uid:string) => {
-   // props.setLoading(true);
-     const response = await ApplyUserAdminInfoList(
+  const CallApplyUserAdminInfoList = async (uid: string) => {
+    setLoading(true);
+    try {
+      const response = await ApplyUserAdminInfoList(
         decodeURIComponent(id as string)
       );
-      console.log(response);
-    //props.setLoading(false);
-    //navigate('/apply-user-admin');
+      if (response.Success) {
+        setUserInfoList(response.data.listdata);
+        setLoading(false);
+      } else {
+        setUserInfoList([]);
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Server is not working", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+        duration: 2000,
+      });
+      setLoading(false);
+      navigate('/apply-user-admin');
+    }
   }
-
   return (
     <div>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
-        <h4>Apply User Admin List</h4>
+      <ul className="list-group spaced-list">
+        {userInfoList.map((customer: IuserInfoModel, index: number) => (
+          <li
+            key={customer.uiid}
+            className={`list-group-item list-group-item-action mb-2
+        ${customer.isactive ? 'list-group-item-success' : 'list-group-item-danger'}
+        ${selectedUiid === customer.uiid ? 'active' : ''}`}
+            onClick={() => onButtonClick(customer.uiid)}
+            style={{ cursor: 'pointer' }}
+            title={`Date: ${customer.created_date instanceof Date
+              ? customer.created_date.toISOString().split('T')[0].replace(/-/g, '/')
+              : new Date(customer.created_date).toISOString().split('T')[0].replace(/-/g, '/')}`}
+          >
+            Token {index + 1}: {customer.uiid.replace(/[^a-zA-Z0-9]/g, '')} 
+            
+            {/* {customer.created_date instanceof Date
+              ? customer.created_date.toISOString().split('T')[0].replace(/-/g, '/')
+              : new Date(customer.created_date).toISOString().split('T')[0].replace(/-/g, '/')} */}
+          </li>
+        ))}
+      </ul>
+
     </div>
   )
 }

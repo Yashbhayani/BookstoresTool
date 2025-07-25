@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import Pagination from "../../../Module/PaginationComponent/Pagination";
 import { useNavigate, useParams } from "react-router-dom";
 import Authcontex from "../../../../Context/Auth/AuthContext";
 import Customercontex from "../../../../Context/CustomerList/CustomerContext";
@@ -10,12 +9,67 @@ import ListOfApplyUserAdmin from "./ListApplyUserAdminComponent/ListOfApplyUserA
 import "./viewapplyuseradmininfo.css";
 
 const ViewApplyUserAdminInfo = (props: any) => {
+
     const navigate = useNavigate();
     let { id } = useParams<string>();
+
+    const context = useContext(Authcontex);
+    const Customercontext = useContext(Customercontex);
+    const { CheckuserFunction } = context;
+    const { GetUserInfo } = Customercontext;
+
+    const [selectedUiid, setSelectedUiid] = useState<string | null>(null);
+
+    useEffect(() => {
+        document.title = PageTitle.ViewApplyUser;
+        const token = sessionStorage.getItem("token");
+        if (token !== null && token !== undefined && token !== "") {
+            CallCheckuser();
+        } else {
+            navigate("/login");
+        }
+    }, []);
+
+    const CallCheckuser = async () => {
+        props.setLoading(true);
+        try {
+            const response = await CheckuserFunction();
+            if (response.Success === true) {
+                if (!response.data) {
+                    props.setLoading(false);
+                    navigate("/");
+                } else {
+                    /*let jsonObject = {
+                        userid: decodeURIComponent(id as string),
+                        userinfoid: 0
+                    }
+                    let response = await GetUserInfo(jsonObject);*/
+                }
+            } else {
+                props.setLoading(false);
+            }
+        } catch {
+            toast.error("Server is not working", {
+                style: {
+                    borderRadius: "10px",
+                    background: "#333",
+                    color: "#fff",
+                },
+                duration: 2000,
+            });
+            props.setLoading(false);
+        }
+    };
 
     const Back = () => {
         navigate('/apply-user-admin');
     }
+
+    const handleChildButtonClick = (uid: string) => {
+        console.log("Button clicked from ListOfApplyUserAdmin", uid);
+        setSelectedUiid(uid);
+    };
+
     return (
         <div>
             <h4>Apply User Admin Info List</h4>
@@ -36,9 +90,13 @@ const ViewApplyUserAdminInfo = (props: any) => {
                         maxHeight: "400px",
                         borderLeft: "2px solid #ccc", // Left border only
                         overflowY: "scroll",
-                        
+
                     }}>
-                        <ListOfApplyUserAdmin setLoading={props}></ListOfApplyUserAdmin>
+                        <ListOfApplyUserAdmin
+                            setLoading={props.setLoading}
+                            onButtonClick={handleChildButtonClick}
+                            selectedUiid={selectedUiid}
+                        ></ListOfApplyUserAdmin>
                     </div>
                 </div>
             </div>

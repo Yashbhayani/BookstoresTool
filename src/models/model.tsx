@@ -65,9 +65,9 @@ export interface ApplyUserAdminListModel {
 
 
 export interface IuserInfoModel {
-    createdDate: Date;
-    isActive: boolean;
-    isUserValid: number;
+    created_date: Date;
+    isactive: boolean;
+    isuser_valid: number;
     uiid: string;
-}
+}   
 

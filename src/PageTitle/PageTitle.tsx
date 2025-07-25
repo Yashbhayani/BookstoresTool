@@ -14,6 +14,7 @@ const PageTitle = {
     EditSubCategory: "Edit SubCategory",
     Admin: "Admin",
     UserAdmin: "UserAdmin",
+    ViewApplyUser: "ViewApplyUser",
     ListOfApplyUserAdmin: "Apply User Admin List",
 };
 

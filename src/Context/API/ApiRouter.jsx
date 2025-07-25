@@ -47,6 +47,7 @@ export const adminurl = "admin/list";
 export const useradminurl = "useradmin/list";
 export const applyuseradminurl = "apply/useradmin/list";
 export const applyuserinfolist = "apply/applyuser/infolist";
+export const getuserinfo = "/apply/applyuser/getuserinfo";
 
 //user
 export const userurl = "user/list";
