@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import bookstoreLogo from '../../image/bookheader.png';
 import './header.css';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, matchPath } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../../../Redux';
@@ -17,6 +17,9 @@ const Header = (props: any) => {
   const { CheckuserFunction } = authContext;
   const action = bindActionCreators(actionCreators, dispatch);
   const [Checkuser, setCheckuser] = useState(false);
+
+  const Settingpath = ["/product", "/category", "/subcategory"];
+  const isUserAdminPath =  ["/user-admin", "/apply-user-admin"].includes(location.pathname) || matchPath("/apply-user-info-list/:id", location.pathname);
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -84,9 +87,7 @@ const Header = (props: any) => {
               </Link>
 */}
               <Link className={`nav-link collapsed mt-0
-                ${location.pathname === '/product' ||
-                  location.pathname === '/category' ||
-                  location.pathname === '/subcategory' ? 'active' : ''}`}
+                ${ Settingpath.includes(location.pathname) ? 'active' : ''}`}
                 data-bs-toggle='collapse' to='#submenu2' aria-expanded='false' hidden={!Checkuser}>
                 <i className='fs-4 bi-gear-wide-connected'></i> <span className='ms-1 d-none d-sm-inline'>Setting</span>
               </Link>
@@ -116,7 +117,7 @@ const Header = (props: any) => {
                 <i className="fs-4 bi-person-fill"></i> <span className='ms-1 d-none d-sm-inline'>Admin</span>
               </Link>
 
-              <Link className={`nav-link collapsed mt-0 ${location.pathname === '/user-admin' ? 'active' : ''}`} to='/user-admin' hidden={!Checkuser}>
+              <Link className={`nav-link collapsed mt-0 ${isUserAdminPath? 'active' : ''}`} to='/user-admin' hidden={!Checkuser}>
                 <i className="fs-4 bi-person-workspace"></i> <span className='ms-1 d-none d-sm-inline'>User Admin</span>
               </Link>
 

@@ -1,4 +1,10 @@
 export const host = "http://localhost:8080/api/";
+export const IPv4address = "https://api.ipify.org?format=json";
+export const IPv6address = "https://api64.ipify.org/?format=json";
+
+// config.js
+export const IP_API_BASE_URL = "http://ip-api.com/json";
+export const IP_API_FIELDS = "status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query";
 
 
 export const loginurl = "login";

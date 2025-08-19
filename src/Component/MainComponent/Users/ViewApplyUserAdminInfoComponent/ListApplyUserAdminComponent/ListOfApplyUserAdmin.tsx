@@ -67,9 +67,10 @@ const ListOfApplyUserAdmin = ({ setLoading, onButtonClick, selectedUiid }: Props
         decodeURIComponent(id as string)
       );
       if (response.Success) {
-        setUserInfoList(response.data.listdata);
+ //       console.log("ApplyUserAdminInfoList response", response);
+       setUserInfoList(response.data.listdata);
         setLoading(false);
-      } else {
+      } else {  
         setUserInfoList([]);
         setLoading(false);
       }

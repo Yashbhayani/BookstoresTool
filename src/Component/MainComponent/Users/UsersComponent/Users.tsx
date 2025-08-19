@@ -269,7 +269,7 @@ const Users = (props: any) => {
               <td>
                 <img
                   className="rounded-circle"
-                  src={`${apiroute.host}${apiroute.customerimage}${customer.image}`}
+                  src={`${apiroute.host}${apiroute.customerimage}${customer.image}?token=${sessionStorage.getItem("token")}`}
                   alt={`${index}_${customer.firstName} ${customer.firstName}`}
                 />
               </td>

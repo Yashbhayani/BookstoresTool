@@ -12,7 +12,7 @@ const Dashboard = () => {
         } else {
             navigate('/login');
         }
-    }, []); // Empty dependency array ensures this runs only on mount
+    }, []);
 
     return (
         <div>

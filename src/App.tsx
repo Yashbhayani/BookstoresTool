@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate, useNavigate, createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useNavigate,
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,37 +60,172 @@ function App() {
       }
     };
     fetchData();
+    window.addEventListener("beforeunload", () => {
+      console.log("Page is being refreshed or closed");
+    });
   }, []);
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={LogState ? <Navigate to='/' /> : <Login setLoading={setLoading} />} />
-          <Route path="/" element={<Header setLoading={setLoading}><Home setLoading={setLoading} /></Header>} />
-          <Route path="/product" element={<Header setLoading={setLoading}><ListProduct setLoading={setLoading} /></Header>} />
-          <Route path="/product/save" element={<Header setLoading={setLoading}><AddProduct setLoading={setLoading} /></Header>} />
-          <Route path="/product/edit/:id" element={<Header setLoading={setLoading}><EditProduct setLoading={setLoading} /></Header>} />
-          <Route path="/category" element={<Header setLoading={setLoading}><ListCategory setLoading={setLoading} /></Header>} />
-          <Route path="/category/save" element={<Header setLoading={setLoading}><AddCategory setLoading={setLoading} /></Header>} />
-          <Route path="/category/edit/:id" element={<Header setLoading={setLoading}><EditCategory setLoading={setLoading} /></Header>} />
-          <Route path="/subcategory" element={<Header setLoading={setLoading}><ListSubCategory setLoading={setLoading} /></Header>} />
-          <Route path="/subcategory/save" element={<Header setLoading={setLoading}><AddSubCategory setLoading={setLoading} /></Header>} />
-          <Route path="/subcategory/edit/:id" element={<Header setLoading={setLoading}><EditSubCategory setLoading={setLoading} /></Header>} />
+          <Route
+            path="/login"
+            element={
+              LogState ? <Navigate to="/" /> : <Login setLoading={setLoading} />
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <Header setLoading={setLoading}>
+                <Home setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/product"
+            element={
+              <Header setLoading={setLoading}>
+                <ListProduct setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/product/save"
+            element={
+              <Header setLoading={setLoading}>
+                <AddProduct setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/product/edit/:id"
+            element={
+              <Header setLoading={setLoading}>
+                <EditProduct setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/category"
+            element={
+              <Header setLoading={setLoading}>
+                <ListCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/category/save"
+            element={
+              <Header setLoading={setLoading}>
+                <AddCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/category/edit/:id"
+            element={
+              <Header setLoading={setLoading}>
+                <EditCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/subcategory"
+            element={
+              <Header setLoading={setLoading}>
+                <ListSubCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/subcategory/save"
+            element={
+              <Header setLoading={setLoading}>
+                <AddSubCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/subcategory/edit/:id"
+            element={
+              <Header setLoading={setLoading}>
+                <EditSubCategory setLoading={setLoading} />
+              </Header>
+            }
+          />
           {/* <Route path="/dashboard" element={<Header setLoading={setLoading}><Dashboard /></Header>} /> */}
-          <Route path="/books" element={<Header setLoading={setLoading}><Books /></Header>} />
-          <Route path="/book/:id" element={<Header setLoading={setLoading}><Book /></Header>} />
-          <Route path="/users" element={<Header setLoading={setLoading}><Users setLoading={setLoading} /></Header>} />
-          <Route path="/user-admin" element={<Header setLoading={setLoading}><UserAdmin setLoading={setLoading} /></Header>} />
-          <Route path="/apply-user-admin" element={<Header setLoading={setLoading}><ApplyUserAdminList setLoading={setLoading} /></Header>} />
-          <Route path="/apply-user-info-list/:id" element={<Header setLoading={setLoading}><ViewApplyUserAdminInfo setLoading={setLoading} /></Header>} />
-          <Route path="/admin" element={<Header setLoading={setLoading}><Admin setLoading={setLoading} /></Header>} />
+          <Route
+            path="/books"
+            element={
+              <Header setLoading={setLoading}>
+                <Books />
+              </Header>
+            }
+          />
+          <Route
+            path="/book/:id"
+            element={
+              <Header setLoading={setLoading}>
+                <Book />
+              </Header>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <Header setLoading={setLoading}>
+                <Users setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/user-admin"
+            element={
+              <Header setLoading={setLoading}>
+                <UserAdmin setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/apply-user-admin"
+            element={
+              <Header setLoading={setLoading}>
+                <ApplyUserAdminList setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/apply-user-info-list/:id"
+            element={
+              <Header setLoading={setLoading}>
+                <ViewApplyUserAdminInfo setLoading={setLoading} />
+              </Header>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <Header setLoading={setLoading}>
+                <Admin setLoading={setLoading} />
+              </Header>
+            }
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
 
       <div className="spinner-container">
-        <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 1000 }}>
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1000,
+          }}
+        >
           <BallTriangle
             height={80}
             width={80}
@@ -92,7 +236,10 @@ function App() {
           />
         </div>
       </div>
-      <div className="overlay" style={{ display: loading ? 'block' : 'none' }}></div>
+      <div
+        className="overlay"
+        style={{ display: loading ? "block" : "none" }}
+      ></div>
       <Toaster position="top-right" reverseOrder={true} />
     </>
   );

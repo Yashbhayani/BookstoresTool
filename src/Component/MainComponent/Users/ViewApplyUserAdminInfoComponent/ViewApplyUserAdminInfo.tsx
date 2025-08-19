@@ -39,11 +39,7 @@ const ViewApplyUserAdminInfo = (props: any) => {
                     props.setLoading(false);
                     navigate("/");
                 } else {
-                    /*let jsonObject = {
-                        userid: decodeURIComponent(id as string),
-                        userinfoid: 0
-                    }
-                    let response = await GetUserInfo(jsonObject);*/
+                    CallUserInfo(decodeURIComponent(id as string), 0);
                 }
             } else {
                 props.setLoading(false);
@@ -61,6 +57,40 @@ const ViewApplyUserAdminInfo = (props: any) => {
         }
     };
 
+    const CallUserInfo = async (userid: string, userinfoid: any ) => {
+    try {
+        props.setLoading(true);
+        let jsonObject = {
+                        userid: userid,
+                        userinfoid: userinfoid == null ? 0 : userinfoid, 
+                    };
+        let response = await GetUserInfo(jsonObject);
+        if(response.Success){
+            if (!response.data) {
+                props.setLoading(false);
+                navigate("/");
+            }else{
+                console.log("GetUserInfo response", response);
+                props.setLoading(false);
+            }
+        }else{
+            props.setLoading(false);   
+        }
+        console.log("GetUserInfo response", response);
+        
+    } catch (error) {
+         toast.error("Server is not working", {
+                style: {
+                    borderRadius: "10px",
+                    background: "#333",
+                    color: "#fff",
+                },
+                duration: 2000,
+            });
+            props.setLoading(false);
+    }            
+    }
+
     const Back = () => {
         navigate('/apply-user-admin');
     }
@@ -68,6 +98,7 @@ const ViewApplyUserAdminInfo = (props: any) => {
     const handleChildButtonClick = (uid: string) => {
         console.log("Button clicked from ListOfApplyUserAdmin", uid);
         setSelectedUiid(uid);
+        CallUserInfo(decodeURIComponent(id as string), uid);
     };
 
     return (

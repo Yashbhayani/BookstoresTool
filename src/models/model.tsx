@@ -71,3 +71,28 @@ export interface IuserInfoModel {
     uiid: string;
 }   
 
+// IpLookupResult.ts
+
+export interface IpLookupResult {
+  // User credentials
+  email: string;
+  password: string;
+  ip4address: string;
+  ip6address: string;
+
+  // IP lookup fields
+  status?: string;
+  country?: string;
+  countryCode?: string;
+  region?: string;
+  regionName?: string;
+  city?: string;
+  zip?: string;
+  lat?: number;
+  lon?: number;
+  timezone?: string;
+  isp?: string;
+  org?: string;
+  asn?: string;
+  query?: string; // original IP
+}

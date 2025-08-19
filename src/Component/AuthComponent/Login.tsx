@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../Redux";
 import Authcontex from "../../Context/Auth/AuthContext";
+import { IP_API_BASE_URL, IP_API_FIELDS, IPv4address, IPv6address } from "../../Context/API/ApiRouter";
+import { IpLookupResult } from "../../models/model";
 
 const Login = (props: any) => {
     const context = useContext(Authcontex);
@@ -20,6 +22,8 @@ const Login = (props: any) => {
     });
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [customerList, setCustomerList] = useState<IpLookupResult[]>([]);
+
 
     useEffect(() => {
         const token = sessionStorage.getItem("token");
@@ -29,11 +33,18 @@ const Login = (props: any) => {
     const onLogin = async (event: any) => {
         event.preventDefault();
         props.setLoading(true);
+
         try {
-            let formdata = {
+            const ipv4 = await getIpv4address();
+            const ipv6 = await getIpv6address();
+            let formdata: IpLookupResult  = {
                 email: email,
-                password: password
+                password: password,
+                ip4address: ipv4,
+                ip6address: ipv6,
             }
+            setCustomerList((prevList) => [...prevList, formdata]);
+
             const response = await LoginFunction(formdata);
             if (response.status === true) {
                 sessionStorage.setItem("token", response.token);
@@ -71,6 +82,42 @@ const Login = (props: any) => {
             props.setLoading(false);
         }
     }
+
+    const getIpv4address = async () => {
+        try {
+            const response = await fetch(IPv4address);  
+            const data = await response.json();
+            await getIpAddresswithdata(data.ip); // enrich IP data
+            return data.ip;
+        } catch (error) {
+            console.error("Error fetching IP address:", error);
+        }
+    }
+
+    const getIpv6address = async () => {
+        try {
+            const response = await fetch(IPv6address);  
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            console.error("Error fetching IP address:", error);
+        }
+    }
+
+    const getIpAddresswithdata = async (ip:any) => {
+        try {
+            const url = `${IP_API_BASE_URL}/${ip}?fields=${IP_API_FIELDS}`;
+            const response = await fetch(url);  
+            const data = await response.json();
+            if (data.status === "success") {
+                setCustomerList(data);
+                console.log("IP Address Data:", data);
+            }
+        } catch (error) {
+            console.error("Error fetching IP address:", error);
+        }
+    }
+
 
     return (
         <div className="login-container">
