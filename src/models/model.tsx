@@ -79,6 +79,9 @@ export interface IpLookupResult {
   password: string;
   ip4address: string;
   ip6address: string;
+  browser: string;
+  os: string;
+  deviceType: string;
 
   // IP lookup fields
   status?: string;

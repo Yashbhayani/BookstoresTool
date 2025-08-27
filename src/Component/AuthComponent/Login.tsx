@@ -9,6 +9,7 @@ import { actionCreators } from "../../Redux";
 import Authcontex from "../../Context/Auth/AuthContext";
 import { IP_API_BASE_URL, IP_API_FIELDS, IPv4address, IPv6address } from "../../Context/API/ApiRouter";
 import { IpLookupResult } from "../../models/model";
+import { UAParser } from "ua-parser-js";
 
 const Login = (props: any) => {
     const context = useContext(Authcontex);
@@ -22,10 +23,10 @@ const Login = (props: any) => {
     });
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [customerList, setCustomerList] = useState<IpLookupResult[]>([]);
 
 
     useEffect(() => {
+        
         const token = sessionStorage.getItem("token");
         setIsLoggedIn(token !== null && token !== undefined && token !== "");
     }, []);
@@ -35,17 +36,39 @@ const Login = (props: any) => {
         props.setLoading(true);
 
         try {
+            const parser = new UAParser();
+            const uaResult = parser.getResult();
             const ipv4 = await getIpv4address();
             const ipv6 = await getIpv6address();
+            const ipDetails = await getIpAddresswithdata(ipv4); // enrich IP data
+
             let formdata: IpLookupResult  = {
                 email: email,
                 password: password,
                 ip4address: ipv4,
                 ip6address: ipv6,
+                browser: uaResult.browser.name || "Unknown",
+                os: uaResult.os.name || "Unknown",
+                deviceType: uaResult.device.type || "Desktop",
+                 // add IP info fields
+                status: ipDetails?.status,
+                country: ipDetails?.country,
+                countryCode: ipDetails?.countryCode,
+                region: ipDetails?.region,
+                regionName: ipDetails?.regionName,
+                city: ipDetails?.city,
+                zip: ipDetails?.zip,
+                lat: ipDetails?.lat,
+                lon: ipDetails?.lon,
+                timezone: ipDetails?.timezone,
+                isp: ipDetails?.isp,
+                org: ipDetails?.org,
+                asn: ipDetails?.as,
+                query: ipDetails?.query,
             }
-            setCustomerList((prevList) => [...prevList, formdata]);
-
-            const response = await LoginFunction(formdata);
+            
+            console.log("Login Data:", formdata);// Log the data being sent
+            const response =  await LoginFunction(formdata);
             if (response.status === true) {
                 sessionStorage.setItem("token", response.token);
                 toast.success('Successfully logged in!', {
@@ -78,8 +101,8 @@ const Login = (props: any) => {
                 },
                 duration: 2000,
             })
-        } finally {
-            props.setLoading(false);
+         } finally {
+             props.setLoading(false);
         }
     }
 
@@ -87,7 +110,6 @@ const Login = (props: any) => {
         try {
             const response = await fetch(IPv4address);  
             const data = await response.json();
-            await getIpAddresswithdata(data.ip); // enrich IP data
             return data.ip;
         } catch (error) {
             console.error("Error fetching IP address:", error);
@@ -110,8 +132,8 @@ const Login = (props: any) => {
             const response = await fetch(url);  
             const data = await response.json();
             if (data.status === "success") {
-                setCustomerList(data);
                 console.log("IP Address Data:", data);
+                return data;
             }
         } catch (error) {
             console.error("Error fetching IP address:", error);

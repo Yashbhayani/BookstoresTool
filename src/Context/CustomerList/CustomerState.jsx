@@ -1,138 +1,68 @@
 import React from "react";
 import * as apiroute from "../API/ApiRouter";
 import Customercontex from "./CustomerContext";
+import apiRequest from "../API/ApiRequest";
+
 
 const CustomerState = (props) => {
+  // ✅ Customer functions
 
-    const AdminList = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.adminurl}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const AdminList = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.adminurl}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
-    const UserAdminList = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.useradminurl}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const UserAdminList = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.useradminurl}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
-    const ApplyUserAdminList = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.applyuseradminurl}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const ApplyUserAdminList = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.applyuseradminurl}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
-    const UserList = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.userurl}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const UserList = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.userurl}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
+  const ApplyUserAdminInfoList = (uid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.applyuserinfolist}`,
+      method: "GET",
+      params: { uid },
+    });
 
-    const ApplyUserAdminInfoList = async (uid) => {
-        try {
+  const GetUserInfo = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.getuserinfo}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
-            let urlWithParams = `${apiroute.host}${apiroute.applyuserinfolist}?uid=${encodeURIComponent(uid)}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
-
-
-    const GetUserInfo = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.getuserinfo}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
-
-    return (
-        <Customercontex.Provider
-            value={{
-                AdminList,
-                UserAdminList,
-                UserList,
-                ApplyUserAdminList,
-                ApplyUserAdminInfoList,
-                GetUserInfo
-            }}
-        >
-            {props.children}
-        </Customercontex.Provider>
-    );
-}
+  return (
+    <Customercontex.Provider
+      value={{
+        AdminList,
+        UserAdminList,
+        UserList,
+        ApplyUserAdminList,
+        ApplyUserAdminInfoList,
+        GetUserInfo,
+      }}
+    >
+      {props.children}
+    </Customercontex.Provider>
+  );
+};
 
 export default CustomerState;

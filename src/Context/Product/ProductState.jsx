@@ -1,212 +1,98 @@
-import React, { useState } from "react";
+import React from "react";
 import Productcontex from "./ProductContext";
 import * as apiroute from "../API/ApiRouter";
+import apiRequest from "../API/ApiRequest";
+
 
 const ProductState = (props) => {
-    const ProductFunction = async (report) => {
-        try {
-            let jsonString = JSON.stringify(report);
-            let reportParam = encodeURIComponent(jsonString);
-            let urlWithParams = `${apiroute.host}${apiroute.producturl}?report=${reportParam}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  // ✅ Product Functions using dynamic apiRequest
+  const ProductFunction = (report) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.producturl}`,
+      method: "GET",
+      params: { report: JSON.stringify(report) },
+    });
 
+  const ProductCodeFunction = (code) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.productcodeurl}`,
+      method: "GET",
+      params: { code },
+    });
 
-    const ProductCodeFunction = async (code) => {
-        try {
-            let urlWithParams = `${apiroute.host}${apiroute.productcodeurl}?code=${code}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const SaveProductFuncation = (formdata) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.saveproducturl}`,
+      method: "POST",
+      body: formdata,
+    });
 
-    const SaveProductFuncation = async (formdata) => {
-        try {
-            const response = await fetch(apiroute.host + apiroute.saveproducturl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-                body: JSON.stringify(formdata),
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const UpdateProductFuncation = (formdata) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.updateproducturl}`,
+      method: "PUT",
+      body: formdata,
+    });
 
-    const UpdateProductFuncation = async (formdata) => {
-        try {
-            const response = await fetch(apiroute.host + apiroute.updateproducturl, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-                body: JSON.stringify(formdata),
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const DeleteProductFuncation = (Pid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.deleteproducturl}`,
+      method: "DELETE",
+      params: { pid: Pid },
+    });
 
-    const DeleteProductFuncation = async (Pid) => {
-        try {
-            const response = await fetch(
-                `${apiroute.host}${apiroute.deleteproducturl}?pid=${encodeURIComponent(Pid)}`,
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: sessionStorage.getItem("token"),
-                    },
-                }
-            );
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const RestoreProductFuncation = (Pid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.restoreproducturl}`,
+      method: "PUT",
+      params: { pid: Pid },
+    });
 
-    const RestoreProductFuncation = async (Pid) => {
-        try {
-            const response = await fetch(
-                `${apiroute.host}${apiroute.restoreproducturl}?pid=${encodeURIComponent(Pid)}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: sessionStorage.getItem("token"),
-                    },
-                }
-            );
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const ActiveteProductFuncation = (Pid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.activeproducturl}`,
+      method: "PUT",
+      params: { pid: Pid },
+    });
 
-    const ActiveteProductFuncation = async (Pid) => {
-        try {
-            const response = await fetch(
-                `${apiroute.host}${apiroute.activeproducturl}?pid=${encodeURIComponent(Pid)}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: sessionStorage.getItem("token"),
-                    },
-                }
-            );
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const DeActiveProductFuncation = (Pid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.deactiveproducturl}`,
+      method: "PUT",
+      params: { pid: Pid },
+    });
 
-    const DeActiveProductFuncation = async (Pid) => {
-        try {
-            const response = await fetch(
-                `${apiroute.host}${apiroute.deactiveproducturl}?pid=${encodeURIComponent(Pid)}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: sessionStorage.getItem("token"),
-                    },
-                }
-            );
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
+  const SelectProductListFunction = () =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.select_product_list}`,
+      method: "GET",
+    });
 
+  const GetProductFunction = (pid) =>
+    apiRequest({
+      url: `${apiroute.host}${apiroute.getproducturl}`,
+      method: "GET",
+      params: { pid },
+    });
 
-    const SelectProductListFunction = async () => {
-        try {
-            const response = await fetch(apiroute.host + apiroute.select_product_list, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
-
-
-    const GetProductFunction = async (pid) => {
-        try {
-            let urlWithParams = `${apiroute.host}${apiroute.getproducturl}?pid=${encodeURIComponent(
-                pid
-            )}`;
-            const response = await fetch(urlWithParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    token: sessionStorage.getItem("token"),
-                },
-            });
-            const json = await response.json();
-            return json;
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
-    };
-
-
-
-    return (
-        <Productcontex.Provider
-            value={{
-                //Product
-                ProductFunction,
-                ProductCodeFunction,
-                SaveProductFuncation,
-                SelectProductListFunction,
-                GetProductFunction,
-                UpdateProductFuncation,
-                DeleteProductFuncation,
-                RestoreProductFuncation,
-                ActiveteProductFuncation,
-                DeActiveProductFuncation,
-            }}
-        >
-            {props.children}
-        </Productcontex.Provider>
-    );
+  return (
+    <Productcontex.Provider
+      value={{
+        ProductFunction,
+        ProductCodeFunction,
+        SaveProductFuncation,
+        UpdateProductFuncation,
+        DeleteProductFuncation,
+        RestoreProductFuncation,
+        ActiveteProductFuncation,
+        DeActiveProductFuncation,
+        SelectProductListFunction,
+        GetProductFunction,
+      }}
+    >
+      {props.children}
+    </Productcontex.Provider>
+  );
 };
+
 export default ProductState;
