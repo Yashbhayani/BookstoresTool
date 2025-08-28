@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Route,
@@ -40,8 +40,11 @@ import UserAdmin from "./Component/MainComponent/Users/UserAdminComponent/UserAd
 import Admin from "./Component/MainComponent/AdminComponent/ListAdminComponent/Admin";
 import ApplyUserAdminList from "./Component/MainComponent/Users/ApplyUserAdminComponent/ApplyUserAdminList";
 import ViewApplyUserAdminInfo from "./Component/MainComponent/Users/ViewApplyUserAdminInfoComponent/ViewApplyUserAdminInfo";
+import Authcontex from "./Context/Auth/AuthContext";
 
 function App() {
+  const context = useContext(Authcontex);
+  const { LogOutFunction } = context;
   const [loading, setLoading] = useState(false);
   const LogState = useSelector((state: any) => state.statues); // Assuming `state.statues` is correct
   const dispatch = useDispatch();
@@ -60,10 +63,16 @@ function App() {
       }
     };
     fetchData();
-    window.addEventListener("beforeunload", () => {
-      console.log("Page is being refreshed or closed");
-    });
-  }, []);
+
+    
+  // Handle logout when page refreshes or closes
+  const handleBeforeUnload = () => {
+    // you can't use await here (browser doesn't wait)
+    LogOutFunction(); 
+    console.log("Page is being refreshed or closed");
+  };
+    window.addEventListener("beforeunload", handleBeforeUnload );
+  }, [LogOutFunction, loginAction]);
 
   return (
     <>

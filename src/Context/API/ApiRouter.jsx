@@ -8,6 +8,7 @@ export const IP_API_FIELDS = "status,message,country,countryCode,region,regionNa
 
 
 export const loginurl = "login";
+export const logouturl = "logout";
 export const checkuserurl = "checkuser";
 export const dashboardurl = "dashboard";
 

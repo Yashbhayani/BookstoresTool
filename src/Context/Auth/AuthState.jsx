@@ -12,6 +12,13 @@ const AuthState = (props) => {
       body: formdata,
     });
 
+    const LogOutFunction = () =>
+    apiRequest({
+      url: apiroute.host + apiroute.logouturl,
+      method: "PUT",
+    });
+
+
   const CheckuserFunction = () =>
     apiRequest({
       url: apiroute.host + apiroute.checkuserurl,
@@ -23,6 +30,7 @@ const AuthState = (props) => {
       value={{
         LoginFunction,
         CheckuserFunction,
+        LogOutFunction
       }}
     >
       {props.children}

@@ -14,7 +14,7 @@ const Header = (props: any) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const authContext = useContext(AuthContext);
-  const { CheckuserFunction } = authContext;
+  const { CheckuserFunction, LogOutFunction  } = authContext;
   const action = bindActionCreators(actionCreators, dispatch);
   const [Checkuser, setCheckuser] = useState(false);
 
@@ -61,9 +61,13 @@ const Header = (props: any) => {
     }
   };
 
-  const logout = () => {
-    sessionStorage.removeItem('token');
-    action.Logout(true);
+  const logout = async() => {
+    const response = await LogOutFunction();
+    console.log(response);
+    if(response && response.Success){
+      sessionStorage.removeItem('token');
+      action.Logout(true);
+    }
     navigate('/login');
   };
 
