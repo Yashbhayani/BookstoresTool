@@ -30,7 +30,7 @@ public class BookstoreApplication implements WebMvcConfigurer {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}*/
-		System.out.println("Hii");
+		logger.info("BookstoreApplication started successfully.");
 	}
 
 	@RequestMapping(value = "/error")
@@ -41,9 +41,11 @@ public class BookstoreApplication implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-				.allowedOrigins("*") // allow all origins
+				//.allowedOrigins("*") // allow all origins
+				.allowedOrigins("http://localhost:3000") // allow all origins
 				.allowedMethods("*") // allow all HTTP methods
-				.allowedHeaders("*"); // allow all headers
+				.allowedHeaders("*")
+                .allowCredentials(true); // allow all headers
 
 	}
 

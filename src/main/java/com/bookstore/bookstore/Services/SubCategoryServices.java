@@ -55,7 +55,8 @@ public class SubCategoryServices implements SubCategoryRepository {
                 return response;
             }
 
-            Map<String, Object> subCategoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLSUBCATEGORYTYPES.name(),report);
+            Map<String, Object> subCategoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.allsubcategorytypes.name().toUpperCase()
+                    ,report);
             if (subCategoryResponse.containsKey("Success") && (boolean) subCategoryResponse.get("Success")) {
                 response.put("data", subCategoryResponse.get("data"));
                 response.put("Success", true);
@@ -92,7 +93,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                 return response;
             }
 
-            Map<String, Object> categoryResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.SELECTSUBCATEGORY.name(), scid);
+            Map<String, Object> categoryResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.selectsubcategory.name().toUpperCase(), scid);
             if (categoryResponse.containsKey("Success") && (boolean) categoryResponse.get("Success")) {
                 response.put("data", categoryResponse.get("data"));
                 response.put("Success", true);
@@ -115,13 +116,13 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.VERIFYSUBCATEGORYCODE.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.verifysubcategorycode.name().toUpperCase()}, String.class);
                         boolean categoryCode = Boolean.TRUE.equals(jdbcTemplate.execute(SpResult, (CallableStatementCallback<Boolean>) callableStatement -> {
                             callableStatement.setString(1, Code);
                             boolean hasResults = callableStatement.execute();
@@ -164,13 +165,13 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.VERIFYSUBCATEGORYPATH.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.verifysubcategorypath.name().toUpperCase()}, String.class);
                         boolean categoryPath = Boolean.TRUE.equals(jdbcTemplate.execute(SpResult, (CallableStatementCallback<Boolean>) callableStatement -> {
                             callableStatement.setString(1, Path);
                             boolean hasResults = callableStatement.execute();
@@ -213,17 +214,17 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.productstatus.name().toUpperCase()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.pID});
                         Long statusPResultLong = (Long) S_result.get("Status"); // Change to Long
                         if(statusPResultLong == 1 ? true : false){
-                            SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CATEGORYSTATUS.name()}, String.class);
+                            SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.categorystatus.name().toUpperCase()}, String.class);
                             Map<String, Object> C_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.cID});
                             Long statusCResultLong = (Long) S_result.get("Status");
                             if(statusCResultLong == 1 ? true : false) {
@@ -282,18 +283,18 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
                         int scid = Integer.parseInt(authjwtrepository.IdDecrypt(iSubCategoryModel.scID));
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.productstatus.name().toUpperCase()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
                         if(statusResultLong == 1){
-                            SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CATEGORYSTATUS.name()}, String.class);
+                            SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.categorystatus.name().toUpperCase()}, String.class);
                             Map<String, Object> C_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iSubCategoryModel.cID});
                             Long statusCResultLong = (Long) S_result.get("Status");
                             if(statusCResultLong == 1) {
@@ -348,7 +349,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -394,7 +395,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -440,7 +441,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -486,7 +487,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -532,7 +533,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -540,7 +541,7 @@ public class SubCategoryServices implements SubCategoryRepository {
                     int scid = Integer.parseInt(authjwtrepository.IdDecrypt(scId));
 
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETSUBCATEGORY.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.getsubcategory.name().toUpperCase()}, String.class);
                         var Product_Model = jdbcTemplate.execute(
                                 SpResult,
                                 (CallableStatementCallback<GetSubCategoryModel>) callableStatement -> {
@@ -596,7 +597,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try{
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -678,7 +679,7 @@ public class SubCategoryServices implements SubCategoryRepository {
         try{
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {

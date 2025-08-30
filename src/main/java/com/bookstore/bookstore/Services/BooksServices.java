@@ -37,10 +37,10 @@ public class BooksServices  implements BooksRepository {
 
     private final AuthJwtRepository authjwtrepository;
 
-    @Value("${project.images}")
+    @Value("${project.books.images}")
     private String path;
 
-    @Value("${project.thumbnailimage}")
+    @Value("${project.thumbnail.image}")
     private String thumbnailimagepath;
     public String SpResult = null;
     CommonQueryServicesModel commonQueryServicesModel = new CommonQueryServicesModel();
@@ -66,7 +66,7 @@ public class BooksServices  implements BooksRepository {
                 int maxDescriptionLength = 500;
                 if (Description.length() > 500) {
                     String username = authjwtrepository.getUsernameFromToken(Token);
-                    SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.FINDEIDANDCHECKSTATUS.name()}, String.class);
+                    SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.findeidandcheckstatus.name().toUpperCase()}, String.class);
                     Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                     String userRoleResult = (String) result.get("Result");
                     if (userRoleResult != null) {
@@ -145,14 +145,14 @@ public class BooksServices  implements BooksRepository {
         try{
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
 
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETBOOKSWITHREVIEWSTARS.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.getbookswithreviewstars.name().toUpperCase()}, String.class);
 
                         List<BooksModel> booksList = jdbcTemplate.query(SpResult, new Object[]{bookitem}, new RowMapper<BooksModel>() {
                             @Override
@@ -178,7 +178,7 @@ public class BooksServices  implements BooksRepository {
                         response.put("Success", true);
                         response.put("Code", 200);
                     } else {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETBOOKSFORUSERADMIN.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.getbooksforuseradmin.name().toUpperCase()}, String.class);
                         List<BooksModel> booksList = jdbcTemplate.query(SpResult, new Object[]{username,bookitem}, new RowMapper<BooksModel>() {
                             @Override
                             public BooksModel mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -224,12 +224,12 @@ public class BooksServices  implements BooksRepository {
         try {
             if (authjwtrepository.isTokenValid(token)) {
                 String username = authjwtrepository.getUsernameFromToken(token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 String userResult = jdbcTemplate.queryForObject(SpResult, new Object[]{username}, String.class);
 
                 if ("True".equals(userResult)) {
                     int bid = Integer.parseInt(authjwtrepository.IdDecrypt(bookId));
-                    SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.BOOKALLDETAILS.name()}, String.class);
+                    SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.bookalldetails.name().toUpperCase()}, String.class);
 
                     List<BookModel> booksList = jdbcTemplate.execute(SpResult, (CallableStatementCallback<List<BookModel>>) callableStatement -> {
                         List<BookModel> bookList = new ArrayList<>();

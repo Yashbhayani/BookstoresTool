@@ -42,8 +42,7 @@ public class AuthJwt implements AuthJwtRepository {
     }
 
 
-    public String generateToken(String username) {
-
+    public String generateToken(String username, String ipv4, String ipv6, String browser, String os, String device ) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         try {
@@ -51,6 +50,11 @@ public class AuthJwt implements AuthJwtRepository {
                     .setSubject(username)
                     .setIssuedAt(now)
                     .setExpiration(expiryDate)
+                    .claim("ipv4", ipv4)           // add ipv4
+                    .claim("ipv6", ipv6)           // add ipv6
+                    .claim("browser", browser)     // add browser
+                    .claim("os", os)               // add OS
+                    .claim("device", device)
                     .signWith(key)
                     .compact();
         } catch (Exception e) {
@@ -61,6 +65,27 @@ public class AuthJwt implements AuthJwtRepository {
     public String getUsernameFromToken(String token) {
         return getClaims(token).getBody().getSubject();
     }
+
+    public String getIpv4FromToken(String token) {
+        return getClaims(token).getBody().get("ipv4", String.class);
+    }
+
+    public String getIpv6FromToken(String token) {
+        return getClaims(token).getBody().get("ipv6", String.class);
+    }
+
+    public String getBrowserFromToken(String token) {
+        return getClaims(token).getBody().get("browser", String.class);
+    }
+
+    public String getOsFromToken(String token) {
+        return getClaims(token).getBody().get("os", String.class);
+    }
+
+    public String getDeviceFromToken(String token) {
+        return getClaims(token).getBody().get("device", String.class);
+    }
+
 
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token);

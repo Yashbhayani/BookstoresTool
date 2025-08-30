@@ -29,7 +29,7 @@ public class BooksController {
     }
 
     @PostMapping("/addbooks")
-    public Map<String, Object> AddBooks(@RequestHeader("token") String Token,
+    public Map<String, Object> AddBooks(@CookieValue(value = "access_token", required = false)   String Token,
                                         @RequestParam("bookName")  String BookName,
                                         @RequestParam("price") int Price,
                                         @RequestParam("description") String Description,
@@ -80,14 +80,14 @@ public class BooksController {
     }
     @GetMapping("/books")
     public Map<String, Object> GetBooks(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("bookitem") int Bookitem) throws IOException {
         return  booksRepository.getBookData(Token, Bookitem);
     }
 
     @GetMapping("/getbook")
     public Map<String, Object> GetBook(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("bookid") String bookid
     ) throws IOException {
         return  booksRepository.getBook(Token, bookid);

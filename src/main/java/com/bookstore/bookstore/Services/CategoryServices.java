@@ -58,7 +58,7 @@ public class CategoryServices implements CategoryRepository {
                 return response;
             }
 
-            Map<String, Object> categoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLCATEGORYTYPES.name(),report);
+            Map<String, Object> categoryResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.allcategorytypes.name().toUpperCase(),report);
             if (categoryResponse.containsKey("Success") && (boolean) categoryResponse.get("Success")) {
                 response.put("data", categoryResponse.get("data"));
                 response.put("Success", true);
@@ -95,7 +95,7 @@ public class CategoryServices implements CategoryRepository {
                 return response;
             }
 
-            Map<String, Object> categoryResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.SELECTCATEGORY.name(), Pid);
+            Map<String, Object> categoryResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.selectcategory.name().toUpperCase(), Pid);
             if (categoryResponse.containsKey("Success") && (boolean) categoryResponse.get("Success")) {
                 response.put("data", categoryResponse.get("data"));
                 response.put("Success", true);
@@ -118,13 +118,13 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.VERIFYCATEGORYCODE.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.verifycategorycode.name().toUpperCase()}, String.class);
                         boolean categoryCode = Boolean.TRUE.equals(jdbcTemplate.execute(SpResult, (CallableStatementCallback<Boolean>) callableStatement -> {
                             callableStatement.setString(1, Code);
                             boolean hasResults = callableStatement.execute();
@@ -167,13 +167,13 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.VERIFYCATEGORYPATH.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.verifycategorypath.name().toUpperCase()}, String.class);
                         boolean categoryPath = Boolean.TRUE.equals(jdbcTemplate.execute(SpResult, (CallableStatementCallback<Boolean>) callableStatement -> {
                             callableStatement.setString(1, Path);
                             boolean hasResults = callableStatement.execute();
@@ -216,13 +216,13 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.productstatus.name().toUpperCase()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
                         if(statusResultLong == 1 ? true : false){
@@ -277,14 +277,14 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
                         int cid = Integer.parseInt(authjwtrepository.IdDecrypt(iCategoryModel.sID));
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.PRODUCTSTATUS.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.productstatus.name().toUpperCase()}, String.class);
                         Map<String, Object> S_result = jdbcTemplate.queryForMap(SpResult, new Object[]{iCategoryModel.pID});
                         Long statusResultLong = (Long) S_result.get("Status"); // Change to Long
                         if(statusResultLong == 1){
@@ -336,7 +336,7 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -382,7 +382,7 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -428,7 +428,7 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -474,7 +474,7 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -520,7 +520,7 @@ public class CategoryServices implements CategoryRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -528,7 +528,7 @@ public class CategoryServices implements CategoryRepository {
                     int cid = Integer.parseInt(authjwtrepository.IdDecrypt(cId));
 
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETCATEGORY.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.getcategory.name().toUpperCase()}, String.class);
                         var Product_Model = jdbcTemplate.execute(
                                 SpResult,
                                 (CallableStatementCallback<GetCategoryModel>) callableStatement -> {
@@ -583,7 +583,7 @@ public class CategoryServices implements CategoryRepository {
         try{
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP,new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {

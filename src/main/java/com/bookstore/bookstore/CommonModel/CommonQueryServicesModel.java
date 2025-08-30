@@ -22,4 +22,7 @@ public class CommonQueryServicesModel {
     public String SubCategoryDeleteQuery = "UPDATE subcategorytypetable SET IsDeleted = ? WHERE Id = ?;";
     public String SubCategoryIsActiveQuery = "UPDATE subcategorytypetable SET IsActive = ? WHERE Id = ?;";
 
+
+    public String UserIsActiveQuery = "UPDATE usertable SET IsActive = ?, IsDeleted = ? WHERE id = ?;";
+
 }

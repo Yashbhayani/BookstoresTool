@@ -27,14 +27,14 @@ public class SubCategoryController {
 
     @GetMapping("/subcategory/list")
     public Map<String, Object> List(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("report") String report
     ) throws IOException {
         return  subCategoryRepository.getSubCategory(Token, report);
     }
     @GetMapping("/subcategory/select-subcategory/list")
     public Map<String, Object> SelectList(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") int scid
     ) throws IOException {
         return subCategoryRepository.getselectSubCategorylist(Token, scid);
@@ -42,7 +42,7 @@ public class SubCategoryController {
 
     @GetMapping("/subcategory/code-verify")
     public  Map<String, Object> SubCategoryCode(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("code") String Code
     ) throws IOException{
         return subCategoryRepository.getSubCategoryCode(Token, Code);
@@ -50,7 +50,7 @@ public class SubCategoryController {
 
     @GetMapping("/subcategory/path-verify")
     public  Map<String, Object> SubCategoryPath(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("path") String Code
     ) throws IOException{
         return subCategoryRepository.getSubCategoryPath(Token, Code);
@@ -58,7 +58,7 @@ public class SubCategoryController {
 
     @PostMapping("/subcategory/save")
     public Map<String, Object> Save(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody ISubCategoryModel iSubCategoryModel
     ) throws IOException {
         return  subCategoryRepository.save(Token, iSubCategoryModel);
@@ -66,7 +66,7 @@ public class SubCategoryController {
 
     @PutMapping("/subcategory/update")
     public Map<String, Object> Update(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody ISubCategoryModel iSubCategoryModel
     ) throws IOException {
         return  subCategoryRepository.update(Token, iSubCategoryModel);
@@ -74,7 +74,7 @@ public class SubCategoryController {
 
     @DeleteMapping("/subcategory/delete")
     public Map<String, Object> Delete(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") String scid
     ) throws IOException {
         return  subCategoryRepository.delete(Token, scid);
@@ -82,7 +82,7 @@ public class SubCategoryController {
 
     @PutMapping("/subcategory/restore")
     public Map<String, Object> ReStore(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") String scid
     ) throws IOException {
         return  subCategoryRepository.reStore(Token, scid);
@@ -90,7 +90,7 @@ public class SubCategoryController {
 
     @GetMapping ("/subcategory/getsubategory")
     public Map<String, Object> getSubategoryDetails(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") String scId
     ) throws IOException {
         return  subCategoryRepository.getSubategoryDetails(Token, scId);
@@ -98,7 +98,7 @@ public class SubCategoryController {
 
     @PutMapping("/subcategory/deactive")
     public Map<String, Object> Deactive(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") String cId
     ) throws IOException {
         return  subCategoryRepository.deactive(Token, cId);
@@ -106,7 +106,7 @@ public class SubCategoryController {
 
     @PutMapping("/subcategory/active")
     public Map<String, Object> Active(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("scid") String cId
     ) throws IOException {
         return  subCategoryRepository.reActivate(Token, cId);

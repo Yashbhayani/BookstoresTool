@@ -55,7 +55,7 @@ public class ProductServices implements ProductRepository {
                 return response;
             }
 
-            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.ALLPRODUCTTYPES.name(),report);
+            Map<String, Object> productResponse = this.reportRepository.fetchDetails(ProjectCodes.ReportCods.allproducttypes.name().toUpperCase(),report);
             if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
                 response.put("data", productResponse.get("data"));
                 response.put("Success", true);
@@ -75,7 +75,6 @@ public class ProductServices implements ProductRepository {
     public Map<String, Object> getselectproductlist(String token) {
         Map<String, Object> response = new HashMap<>();
         try {
-
             if (!authjwtrepository.isTokenValid(token)) {
                 response.put("Message", "User is Not valid");
                 response.put("Success", false);
@@ -91,7 +90,7 @@ public class ProductServices implements ProductRepository {
                 return response;
             }
 
-            Map<String, Object> productResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.SELECTPRODUCT.name(), 0);
+            Map<String, Object> productResponse = this.reportRepository.fetchSelectDetails(ProjectCodes.SelectCodes.selectproduct.name().toUpperCase(), 0);
             if (productResponse.containsKey("Success") && (boolean) productResponse.get("Success")) {
                 response.put("data", productResponse.get("data"));
                 response.put("Success", true);
@@ -114,7 +113,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -162,7 +161,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -212,7 +211,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -258,7 +257,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -304,7 +303,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -350,8 +349,8 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
-                Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
+                Map<String, Object> result = jdbcTemplate.queryForMap(Objects.requireNonNull(SpResult), new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
@@ -396,7 +395,7 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
@@ -404,7 +403,7 @@ public class ProductServices implements ProductRepository {
                     int pid = Integer.parseInt(authjwtrepository.IdDecrypt(pId));
 
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.GETPRODUCT.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.getproduct.name().toUpperCase()}, String.class);
                         var Product_Model = jdbcTemplate.execute(
                                 SpResult,
                                 (CallableStatementCallback<ProductModel>) callableStatement -> {
@@ -455,13 +454,13 @@ public class ProductServices implements ProductRepository {
         try {
             if (authjwtrepository.isTokenValid(Token)) {
                 String username = authjwtrepository.getUsernameFromToken(Token);
-                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.CHECKUSERROLE.name()}, String.class);
+                SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.checkuserrole.name().toUpperCase().toUpperCase().toUpperCase()}, String.class);
                 Map<String, Object> result = jdbcTemplate.queryForMap(SpResult, new Object[]{username});
                 String userRoleResult = (String) result.get("Result");
                 if (userRoleResult != null) {
                     boolean isAdmin = Boolean.parseBoolean(userRoleResult);
                     if (isAdmin) {
-                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.VERIFYPRODUCTCODE.name()}, String.class);
+                        SpResult = jdbcTemplate.queryForObject(commonQueryServicesModel.SP, new Object[]{ProjectCodes.ProjectSpCodes.verifyproductcode.name().toUpperCase()}, String.class);
                         boolean productCode = Boolean.TRUE.equals(jdbcTemplate.execute(SpResult, (CallableStatementCallback<Boolean>) callableStatement -> {
                             callableStatement.setString(1, Code);
                             boolean hasResults = callableStatement.execute();

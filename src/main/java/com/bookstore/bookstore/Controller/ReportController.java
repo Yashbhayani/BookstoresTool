@@ -23,13 +23,13 @@ public class ReportController {
 
     @GetMapping("/dashboard")
     public Map<String, Object> Dashboard(
-            @RequestHeader("token") String Token){
+            @CookieValue(value = "access_token", required = false)   String Token){
         return reportServices.dashboard(Token);
     }
 
     @GetMapping("/chart")
     public Map<String, Object> Chart(
-            @RequestHeader("token") String Token){
+            @CookieValue(value = "access_token", required = false)   String Token){
         return reportServices.chart(Token);
     }
 }

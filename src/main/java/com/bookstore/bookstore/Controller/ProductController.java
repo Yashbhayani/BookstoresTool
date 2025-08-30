@@ -26,20 +26,20 @@ public class ProductController {
 
     @GetMapping("/product/list")
     public Map<String, Object> List(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("report") String report
     ) throws IOException {
         return  productRepository.getproduct(Token, report);
     }
 
     @GetMapping("/product/select-product/list")
-    public Map<String, Object> SelectList(@RequestHeader("token") String Token) throws IOException {
+    public Map<String, Object> SelectList(@CookieValue(value = "access_token", required = false)   String Token) throws IOException {
         return  productRepository.getselectproductlist(Token);
     }
 
     @GetMapping("/product/code-verify")
     public  Map<String, Object> ProductCode(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("code") String Code
     ) throws IOException{
         return productRepository.getproductcode(Token, Code);
@@ -47,7 +47,7 @@ public class ProductController {
 
     @PostMapping("/product/save")
     public Map<String, Object> Save(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody IProductModel iProductModel
     ) throws IOException {
         return  productRepository.save(Token, iProductModel);
@@ -55,7 +55,7 @@ public class ProductController {
 
     @PutMapping("/product/update")
     public Map<String, Object> Update(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody IProductModel iProductModel
     ) throws IOException {
         return  productRepository.update(Token, iProductModel);
@@ -63,7 +63,7 @@ public class ProductController {
 
     @GetMapping ("/product/getproduct")
     public Map<String, Object> getProductDetails(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") String pId
     ) throws IOException {
         return  productRepository.getProductDetails(Token, pId);
@@ -71,7 +71,7 @@ public class ProductController {
 
     @DeleteMapping ("/product/delete")
     public Map<String, Object> Delete(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") String pId
     ) throws IOException {
         return  productRepository.delete(Token, pId);
@@ -79,7 +79,7 @@ public class ProductController {
 
     @PutMapping ("/product/restore")
     public Map<String, Object> ReStore(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") String pId
     ) throws IOException {
         return  productRepository.reStore(Token, pId);
@@ -87,7 +87,7 @@ public class ProductController {
 
     @PutMapping ("/product/active")
     public Map<String, Object> Activate(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") String pId
     ) throws IOException {
         return  productRepository.reActivate(Token, pId);
@@ -95,7 +95,7 @@ public class ProductController {
 
     @PutMapping ("/product/deactive")
     public Map<String, Object> DeActivate(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") String pId
     ) throws IOException {
         return  productRepository.deActivate(Token, pId);

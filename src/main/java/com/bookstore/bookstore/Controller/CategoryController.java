@@ -25,7 +25,7 @@ public class CategoryController {
 
     @GetMapping("/category/list")
     public Map<String, Object> List(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("report") String report
     ) throws IOException {
         return  categoryRepository.getCategory(Token, report);
@@ -33,7 +33,7 @@ public class CategoryController {
 
     @GetMapping("/category/select-category/list")
     public Map<String, Object> SelectList(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("pid") int PID
     ) throws IOException {
         return  categoryRepository.getselectCategorylist(Token, PID);
@@ -41,7 +41,7 @@ public class CategoryController {
 
     @GetMapping("/category/code-verify")
     public  Map<String, Object> CategoryCode(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("code") String Code
     ) throws IOException{
         return categoryRepository.getCategoryCode(Token, Code);
@@ -49,7 +49,7 @@ public class CategoryController {
 
     @GetMapping("/category/path-verify")
     public  Map<String, Object> CategoryPath(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("path") String Code
     ) throws IOException{
         return categoryRepository.getCategoryPath(Token, Code);
@@ -57,7 +57,7 @@ public class CategoryController {
 
     @PostMapping("/category/save")
     public Map<String, Object> Save(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody ICategoryModel iCategoryModel
     ) throws IOException {
         return  categoryRepository.save(Token, iCategoryModel);
@@ -65,7 +65,7 @@ public class CategoryController {
 
     @PutMapping("/category/update")
     public Map<String, Object> Update(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestBody ICategoryModel iCategoryModel
     ) throws IOException {
         return  categoryRepository.update(Token, iCategoryModel);
@@ -73,7 +73,7 @@ public class CategoryController {
 
     @GetMapping ("/category/getcategory")
     public Map<String, Object> getCategoryDetails(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.getCategoryDetails(Token, cId);
@@ -81,7 +81,7 @@ public class CategoryController {
 
     @DeleteMapping("/category/delete")
     public Map<String, Object> Delete(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.delete(Token, cId);
@@ -89,7 +89,7 @@ public class CategoryController {
 
     @PutMapping("/category/restore")
     public Map<String, Object> ReStore(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.reStore(Token, cId);
@@ -97,7 +97,7 @@ public class CategoryController {
 
   @PutMapping("/category/active")
     public Map<String, Object> Active(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.reActivate(Token, cId);
@@ -105,7 +105,7 @@ public class CategoryController {
 
     @PutMapping("/category/deactive")
     public Map<String, Object> DeActive(
-            @RequestHeader("token") String Token,
+            @CookieValue(value = "access_token", required = false)   String Token,
             @RequestParam("cid") String cId
     ) throws IOException {
         return  categoryRepository.deactive(Token, cId);
